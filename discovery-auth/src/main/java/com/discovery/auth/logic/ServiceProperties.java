@@ -1,4 +1,4 @@
-package com.discovery.auth.service;
+package com.discovery.auth.logic;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
