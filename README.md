@@ -1,12 +1,14 @@
 # TokenBroker
 
-TokenBroker is a sample of how to deploy multi-tenant services that use a dedicated Token Broker
-service to issue Azure Resource Tokens for CosmosDB (or anything similar such as Shared 
-Access Signature for table storage). For this demo we'll be using Java SpringBoot services 
+TokenBroker is a simple implementation of the Resource Token Broker concept.  The  
+[Resource Token Broker concept](/docs/TokenBrokerConcept.md) allows for increased tenant isolation in multi-tenant
+services using either Azure CosmosDB Resource Tokens (or alternatively Azure Storage Shared Access Signatures).
+
+For this demo we'll be using Java SpringBoot services 
 hosted in Azure WebApp for Containers.  Each small service is designed to be hosted in its
 own Docker instance.
 
-For the purposes of this demo we'll be creating a Discovery Service as our use-case.  Customers
+In this demo we'll be creating a Discovery Service as our use-case.  Customers
 will create a tenant record for themselves, and that tenant information is meant to be discoverable
 to any customer (without any auth). However, we want to ensure that a customer cannot change the
 record of another costumer.
