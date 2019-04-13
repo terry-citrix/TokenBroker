@@ -23,3 +23,8 @@ build/
 gradle/
 out/
 *.iml
+.project
+.settings/
+.vscode/
+.classpath
+bin/

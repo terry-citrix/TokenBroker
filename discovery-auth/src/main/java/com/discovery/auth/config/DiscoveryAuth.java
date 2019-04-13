@@ -3,14 +3,16 @@ package com.discovery.auth.config;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
-import java.util.Arrays;
-
-@ComponentScan({"com.discovery.auth.logic", "com.discovery.auth.service", "com.discovery.auth.config"})
+@ComponentScan(
+   {"com.discovery.auth.logic", 
+    "com.discovery.auth.service", 
+    "com.discovery.auth.config",
+    "com.discovery.auth.controller.api",
+    "com.discovery.auth.controller.view"})
 @SpringBootApplication
 public class DiscoveryAuth {
 
