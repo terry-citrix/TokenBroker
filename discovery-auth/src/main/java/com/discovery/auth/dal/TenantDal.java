@@ -15,6 +15,7 @@ import com.microsoft.azure.documentdb.FeedOptions;
 import com.microsoft.azure.documentdb.FeedResponse;
 import com.microsoft.azure.documentdb.PartitionKey;
 import com.microsoft.azure.documentdb.QueryIterable;
+import com.microsoft.azure.documentdb.RequestOptions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,9 +150,12 @@ public class TenantDal implements TenantDalService {
         // Query for the document to retrieve the self link.
         Document tenantDoc = getDocumentByTenantName(tenantName);
 
+        RequestOptions options = new RequestOptions();
+        options.setPartitionKey(new PartitionKey(tenantName));
+
         try {
             // Delete the document by self link.
-            documentClient.deleteDocument(tenantDoc.getSelfLink(), null);
+            documentClient.deleteDocument(tenantDoc.getSelfLink(), options);
         } catch (DocumentClientException e) {
             e.printStackTrace();
             return false;
