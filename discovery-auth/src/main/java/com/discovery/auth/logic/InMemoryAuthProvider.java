@@ -35,9 +35,6 @@ public class InMemoryAuthProvider implements AuthProviderService {
         }
         String password = creds.toString();
 
-        LOG.info("Validating user '{}' with password '{}'", username, password);
-        LOG.info("Variable identityProvider is null: {}", identityProvider == null);
-
         Optional<UserModel> userOptional = identityProvider
                                             .getUsers()
                                             .stream()

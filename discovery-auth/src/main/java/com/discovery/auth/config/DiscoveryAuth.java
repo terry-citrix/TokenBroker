@@ -12,7 +12,8 @@ import org.springframework.context.annotation.ComponentScan;
     "com.discovery.auth.service", 
     "com.discovery.auth.config",
     "com.discovery.auth.controller.api",
-    "com.discovery.auth.controller.view"})
+    "com.discovery.auth.controller.view",
+    "com.discovery.auth.dal"})
 @SpringBootApplication
 public class DiscoveryAuth {
 

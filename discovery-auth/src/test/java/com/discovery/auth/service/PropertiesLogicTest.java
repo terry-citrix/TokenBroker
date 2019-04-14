@@ -23,7 +23,10 @@ public class PropertiesLogicTest {
     }
 
     @SpringBootApplication
-    @ComponentScan({"com.discovery.auth.logic", "com.discovery.auth.service"})
+    @ComponentScan({
+        "com.discovery.auth.logic", 
+        "com.discovery.auth.service",
+        "com.discovery.auth.dal"})
     static class TestConfiguration {
     }
 

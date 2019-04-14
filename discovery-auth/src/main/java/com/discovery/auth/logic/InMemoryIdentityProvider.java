@@ -19,7 +19,12 @@ public class InMemoryIdentityProvider implements IdentityProviderService {
     @Override
     public void addUser(String username, String password, String role) {
         LOG.info("Adding user '{}'", username);
-        users.add(new UserModel(username, password, role));
+
+        if (getUser(username) != null) {
+            LOG.info("User already exists!");
+        } else {
+            users.add(new UserModel(username, password, role));
+        }
     }
     
     @Override
