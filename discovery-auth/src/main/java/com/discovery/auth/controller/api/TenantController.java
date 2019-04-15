@@ -46,7 +46,7 @@ public class TenantController {
     }
 
     @DeleteMapping("{tenantName}")
-    public boolean deleteTenant(@PathVariable String tenantName) {
+    public Boolean deleteTenant(@PathVariable String tenantName) {
         return tenantService.deleteTenant(tenantName);
     }
 }

@@ -33,5 +33,5 @@ public interface TenantDalService {
      * @param tenantName
      * @return whether the delete was successful.
      */
-    public boolean deleteTenant(String tenantName);
+    public Boolean deleteTenant(String tenantName);
 }

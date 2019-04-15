@@ -23,8 +23,11 @@ public class TenantLogic implements TenantService {
     @Override
     public List<TenantModel> readTenants() {
         List<TenantDocModel> tenantDocs = tenantDalService.readTenants();
+        if (tenantDocs == null) {
+            return null;
+        }
 
-        List<TenantModel> tenantModels = new ArrayList<TenantModel>();
+        List<TenantModel> tenantModels = new ArrayList<TenantModel>();        
         for (TenantDocModel docModel : tenantDocs) {
             TenantModel tenantModel = convertTenantDocModel(docModel);
             tenantModels.add(tenantModel);
@@ -70,7 +73,7 @@ public class TenantLogic implements TenantService {
      * @return whether the delete was successful.
      */
     @Override
-    public boolean deleteTenant(String tenantName) {
+    public Boolean deleteTenant(String tenantName) {
         return tenantDalService.deleteTenant(tenantName);
     }
 

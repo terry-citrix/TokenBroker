@@ -2,6 +2,7 @@ package com.discovery.auth.dal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.discovery.auth.dal.model.TenantDocModel;
 import com.discovery.auth.service.TenantDalService;
@@ -31,8 +32,8 @@ public class TenantDal implements TenantDalService {
     // The name of our collection.
     private static final String COLLECTION_ID = "Tenants";
 
-    // The name of your partition
-    private static final String PARTITION_ID = "TenantName";
+    // The name of your partition key.  It's just for informational purposes.
+    // private static final String PARTITION_ID = "TenantName";
 
     // We'll use Gson for POJO <=> JSON serialization for this example.
     private static Gson gson = new Gson();
@@ -51,6 +52,11 @@ public class TenantDal implements TenantDalService {
 
     @Override
     public TenantDocModel createTenant(TenantDocModel tenantDocModel) {
+        if (documentClient == null) {
+            LOG.error("DocumentClient is not valid!");
+            return null;
+        }
+
         String tenantName = tenantDocModel.getTenantName();
         if (getDocumentByTenantName(tenantName) != null) {
             LOG.info("Caller tried to create the same document, for tenant '" + tenantName +"'");
@@ -89,6 +95,11 @@ public class TenantDal implements TenantDalService {
 
     @Override
     public List<TenantDocModel> readTenants() {
+        if (documentClient == null) {
+            LOG.error("DocumentClient is not valid!");
+            return null;
+        }
+
         List<TenantDocModel> tenantDocs = new ArrayList<TenantDocModel>();
 
         DocumentCollection tenantCollection = getTenantCollection();
@@ -115,6 +126,11 @@ public class TenantDal implements TenantDalService {
 
     @Override
     public TenantDocModel updateTenant(TenantDocModel tenantDocModel) {
+        if (documentClient == null) {
+            LOG.error("DocumentClient is not valid!");
+            return null;
+        }
+
         String tenantName = tenantDocModel.getTenantName();
         Document tenantDocument = getDocumentByTenantName(tenantName);
         if (tenantDocument == null) {
@@ -145,7 +161,12 @@ public class TenantDal implements TenantDalService {
     }
 
     @Override
-    public boolean deleteTenant(String tenantName) {
+    public Boolean deleteTenant(String tenantName) {
+        if (documentClient == null) {
+            LOG.error("DocumentClient is not valid!");
+            return null;
+        }
+
         // Query for the document to retrieve the self link.
         Document tenantDoc = getDocumentByTenantName(tenantName);
         if (tenantDoc == null) {
@@ -167,6 +188,11 @@ public class TenantDal implements TenantDalService {
     }
 
     private Database getTenantDatabase() {
+        if (documentClient == null) {
+            LOG.error("DocumentClient is not valid!");
+            return null;
+        }
+
         if (databaseCache == null) {
             // Get the database if it exists
             List<Database> databaseList = documentClient
@@ -201,6 +227,11 @@ public class TenantDal implements TenantDalService {
     }
 
     private DocumentCollection getTenantCollection() {
+        if (documentClient == null) {
+            LOG.error("DocumentClient is not valid!");
+            return null;
+        }
+
         if (collectionCache == null) {
             // Get the collection if it exists.
             List<DocumentCollection> collectionList = documentClient
@@ -237,6 +268,11 @@ public class TenantDal implements TenantDalService {
     }
 
     private Document getDocumentById(String id) {
+        if (documentClient == null) {
+            LOG.error("DocumentClient is not valid!");
+            return null;
+        }
+
         FeedOptions options = new FeedOptions();
         options.setEnableCrossPartitionQuery(true);
 
@@ -257,6 +293,11 @@ public class TenantDal implements TenantDalService {
     }
 
     private Document getDocumentByTenantName(String tenantName) {
+        if (documentClient == null) {
+            LOG.error("DocumentClient is not valid!");
+            return null;
+        }
+        
         FeedOptions options = new FeedOptions();
         options.setPartitionKey(new PartitionKey(tenantName));
 

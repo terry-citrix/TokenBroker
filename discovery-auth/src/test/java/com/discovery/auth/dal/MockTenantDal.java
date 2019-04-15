@@ -47,7 +47,7 @@ public class MockTenantDal implements TenantDalService {
     }
 
     @Override
-    public boolean deleteTenant(String tenantName) {
+    public Boolean deleteTenant(String tenantName) {
         tenantMap.remove(tenantName);
         return true;
     }
