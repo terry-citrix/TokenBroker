@@ -1,4 +1,4 @@
-package com.discovery.auth.dal;
+package com.discovery.auth.dal.provider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.discovery.auth.dal.model.TenantDocModel;
-import com.discovery.auth.service.TenantDalService;
+import com.discovery.auth.dal.TenantDalService;
 
+/**
+ * NOT USED
+ */
 public class MockTenantDal implements TenantDalService {
     private final Map<String, TenantDocModel> tenantMap;
 

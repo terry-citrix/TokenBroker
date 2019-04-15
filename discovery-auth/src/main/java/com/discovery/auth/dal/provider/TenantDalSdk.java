@@ -1,11 +1,10 @@
-package com.discovery.auth.dal;
+package com.discovery.auth.dal.provider;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.discovery.auth.dal.model.TenantDocModel;
-import com.discovery.auth.service.TenantDalService;
+import com.discovery.auth.dal.TenantDalService;
 import com.google.gson.Gson;
 import com.microsoft.azure.documentdb.Database;
 import com.microsoft.azure.documentdb.Document;
@@ -22,9 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-@Component
-public class TenantDal implements TenantDalService {
-    public static final Logger LOG = LoggerFactory.getLogger(TenantDal.class);
+@Component("TenantDalSdk")
+public class TenantDalSdk implements TenantDalService {
+    public static final Logger LOG = LoggerFactory.getLogger(TenantDalSdk.class);
 
     // The name of our database.
     private static final String DATABASE_ID = "Discovery";
@@ -195,10 +194,16 @@ public class TenantDal implements TenantDalService {
 
         if (databaseCache == null) {
             // Get the database if it exists
-            List<Database> databaseList = documentClient
-                    .queryDatabases(
-                            "SELECT * FROM root r WHERE r.id='" + DATABASE_ID
-                                    + "'", null).getQueryIterable().toList();
+            List<Database> databaseList = null;
+            try {
+                databaseList = documentClient
+                        .queryDatabases(
+                                "SELECT * FROM root r WHERE r.id='" + DATABASE_ID
+                                        + "'", null).getQueryIterable().toList();
+            } catch (Exception ex) {
+                LOG.error("Unable to get DB! Details: " + ex.getMessage());
+                return null;
+            }
 
             if (databaseList.size() > 0) {
                 // Cache the database object so we won't have to query for it

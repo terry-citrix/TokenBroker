@@ -8,12 +8,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 @ComponentScan(
-   {"com.discovery.auth.logic", 
-    "com.discovery.auth.service", 
+   {"com.discovery.auth.logic.provider", 
     "com.discovery.auth.config",
     "com.discovery.auth.controller.api",
     "com.discovery.auth.controller.view",
-    "com.discovery.auth.dal"})
+    "com.discovery.auth.dal.provider"})
 @SpringBootApplication
 public class DiscoveryAuth {
 

@@ -1,6 +1,6 @@
 package com.discovery.auth.config;
 
-import com.discovery.auth.service.AuthProviderService;
+import com.discovery.auth.logic.AuthProviderService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

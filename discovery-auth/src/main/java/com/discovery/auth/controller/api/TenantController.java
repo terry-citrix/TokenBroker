@@ -3,7 +3,7 @@ package com.discovery.auth.controller.api;
 import java.util.List;
 
 import com.discovery.auth.controller.api.model.TenantModel;
-import com.discovery.auth.service.TenantService;
+import com.discovery.auth.logic.TenantService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;

@@ -1,6 +1,6 @@
-package com.discovery.auth.logic;
+package com.discovery.auth.logic.provider;
 
-import com.discovery.auth.service.PropertiesService;
+import com.discovery.auth.logic.PropertiesService;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 

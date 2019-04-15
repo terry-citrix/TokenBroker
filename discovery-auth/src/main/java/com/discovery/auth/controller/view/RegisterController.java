@@ -1,7 +1,7 @@
 package com.discovery.auth.controller.view;
 
 import com.discovery.auth.controller.view.model.RegisterModel;
-import com.discovery.auth.service.IdentityProviderService;
+import com.discovery.auth.logic.IdentityProviderService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

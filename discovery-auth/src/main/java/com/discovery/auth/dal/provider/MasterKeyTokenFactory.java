@@ -1,4 +1,4 @@
-package com.discovery.auth.dal;
+package com.discovery.auth.dal.provider;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -10,10 +10,14 @@ import java.util.Base64;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.discovery.auth.dal.CosmosTokenService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-public class MasterKeyTokenFactory {
+@Component
+public class MasterKeyTokenFactory implements CosmosTokenService {
     public static final Logger LOG = LoggerFactory.getLogger(MasterKeyTokenFactory.class);
     private static final String HMAC_SHA256 = "HmacSHA256";
     
@@ -62,7 +66,7 @@ public class MasterKeyTokenFactory {
         return headerEncoded;
     }
 
-    public String hashHmac256(String key, String data) {
+    private String hashHmac256(String key, String data) {
         try {
             Mac sha256_HMAC = Mac.getInstance(HMAC_SHA256);
             SecretKeySpec secret_key = new SecretKeySpec(

@@ -1,11 +1,11 @@
-package com.discovery.auth.logic;
+package com.discovery.auth.logic.provider;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.discovery.auth.logic.model.UserModel;
-import com.discovery.auth.service.IdentityProviderService;
+import com.discovery.auth.logic.IdentityProviderService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

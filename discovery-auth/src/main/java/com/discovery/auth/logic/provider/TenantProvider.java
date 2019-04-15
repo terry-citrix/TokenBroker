@@ -1,19 +1,21 @@
-package com.discovery.auth.logic;
+package com.discovery.auth.logic.provider;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.discovery.auth.controller.api.model.TenantModel;
 import com.discovery.auth.dal.model.TenantDocModel;
-import com.discovery.auth.service.TenantDalService;
-import com.discovery.auth.service.TenantService;
+import com.discovery.auth.dal.TenantDalService;
+import com.discovery.auth.logic.TenantService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TenantLogic implements TenantService {
+public class TenantProvider implements TenantService {
 
+    @Qualifier("TenantDalSdk")
     @Autowired
     TenantDalService tenantDalService;
 
