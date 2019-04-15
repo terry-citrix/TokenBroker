@@ -51,17 +51,21 @@ public class TenantDal implements TenantDalService {
 
     @Override
     public TenantDocModel createTenant(TenantDocModel tenantDocModel) {
-        Document tenantDoc = new Document(gson.toJson(tenantDocModel));
-
-        // Annotate the document as a TenantDocModel for retrieval (so that we can
-        // store multiple entity types in the collection).
-        //tenantDoc.set("entityType", "tenantDocModel");
-
+        String tenantName = tenantDocModel.getTenantName();
+        if (getDocumentByTenantName(tenantName) != null) {
+            LOG.info("Caller tried to create the same document, for tenant '" + tenantName +"'");
+            return null;
+        }
+        
+        Document tenantDoc = new Document(gson.toJson(tenantDocModel));        
         try {
             // Persist the document using the DocumentClient.
             tenantDoc = documentClient.createDocument(
-                    getTenantCollection().getSelfLink(), tenantDoc, null,
-                    false).getResource();
+                    getTenantCollection().getSelfLink(), 
+                    tenantDoc, 
+                    null,
+                    false)
+                .getResource();
         } catch (DocumentClientException e) {
             e.printStackTrace();
             return null;
@@ -75,12 +79,12 @@ public class TenantDal implements TenantDalService {
         // Retrieve the document by id using our helper method.
         Document tenantDoc = getDocumentByTenantName(tenantName);
 
-        if (tenantDoc != null) {
-            // De-serialize the document in to a TenantDocModel.
-            return gson.fromJson(tenantDoc.toString(), TenantDocModel.class);
-        } else {
+        if (tenantDoc == null) {
             return null;
         }
+
+        // De-serialize the document into a TenantDocModel.
+        return gson.fromJson(tenantDoc.toString(), TenantDocModel.class);
     }
 
     @Override
@@ -95,18 +99,10 @@ public class TenantDal implements TenantDalService {
 
         // Retrieve the TenantDocModel documents.
         FeedResponse<Document> feedDocs = documentClient.queryDocuments(selfLink,
-            //"SELECT * FROM root r WHERE r.entityType = 'tenantDocModel'",
             "SELECT * FROM " + COLLECTION_ID,
             options);
         QueryIterable<Document> queryDocs = feedDocs.getQueryIterable();
         List<Document> documentList = queryDocs.toList();
-
-        /*
-        List<Document> documentList = documentClient
-                .queryDocuments(selfLink,
-                        "SELECT * FROM root r WHERE r.entityType = 'tenantDocModel'",
-                        null).getQueryIterable().toList();
-                        */
 
         // De-serialize the documents into TenantDocModels.
         for (Document tenantDoc : documentList) {
@@ -121,6 +117,9 @@ public class TenantDal implements TenantDalService {
     public TenantDocModel updateTenant(TenantDocModel tenantDocModel) {
         String tenantName = tenantDocModel.getTenantName();
         Document tenantDocument = getDocumentByTenantName(tenantName);
+        if (tenantDocument == null) {
+            return null;
+        }
 
         // Never trust the caller to provide the ID. So we always set it to the value in the DB.
         tenantDocModel.setId(tenantDocument.getId());
@@ -149,6 +148,9 @@ public class TenantDal implements TenantDalService {
     public boolean deleteTenant(String tenantName) {
         // Query for the document to retrieve the self link.
         Document tenantDoc = getDocumentByTenantName(tenantName);
+        if (tenantDoc == null) {
+            return false;
+        }
 
         RequestOptions options = new RequestOptions();
         options.setPartitionKey(new PartitionKey(tenantName));
