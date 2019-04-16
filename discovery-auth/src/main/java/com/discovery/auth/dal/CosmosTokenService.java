@@ -13,7 +13,7 @@ public interface CosmosTokenService {
      * @param tokenVersion Currently it's always "1.0"
      * @return
      */
-    public String generateMasterKeyToken(
+    String generateMasterKeyToken(
         String verb, 
         String resourceType, 
         String resourceId, 
@@ -21,4 +21,5 @@ public interface CosmosTokenService {
         String key,
         String keyType,
         String tokenVersion);
+
 }

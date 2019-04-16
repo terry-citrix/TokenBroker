@@ -2,6 +2,10 @@ package com.discovery.auth.dal;
 
 public interface CosmosHttpService {
 
-    public String readTenants();
+    String readTenants();
+
+    String getCosmosMasterKey();
+
+    String getCosmosUrl();
 
 }

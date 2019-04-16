@@ -19,8 +19,10 @@ import com.microsoft.azure.documentdb.RequestOptions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
+@Primary
 @Component("TenantDalSdk")
 public class TenantDalSdk implements TenantDalService {
     public static final Logger LOG = LoggerFactory.getLogger(TenantDalSdk.class);

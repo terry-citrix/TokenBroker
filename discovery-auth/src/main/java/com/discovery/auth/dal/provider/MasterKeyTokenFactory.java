@@ -43,10 +43,10 @@ public class MasterKeyTokenFactory implements CosmosTokenService {
         String tokenVersion) 
     {
         String payload = String.format("%s\n%s\n%s\n%s\n%s\n",  
-                verb.toLowerCase(),
-                resourceType.toLowerCase(),  
+                verb != null ? verb.toLowerCase() : null,
+                resourceType != null ? resourceType.toLowerCase() : null,  
                 resourceId,  
-                date.toLowerCase(),  
+                date != null ? date.toLowerCase() : null,  
                 ""  
         );  
       

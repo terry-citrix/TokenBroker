@@ -10,10 +10,12 @@ import com.discovery.auth.dal.model.TenantDocModel;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -25,9 +27,17 @@ public class TenantDalRestTest {
     @Autowired
     TenantDalService tenantDalService;
 
-    //@Ignore
+    @SpyBean
+    CosmosHttpService cosmosHttpService;
+
+    @Ignore
     @Test
     public void testReadTenants() {
+        Mockito.doReturn("URL_GOES_HERE")
+            .when(cosmosHttpService).getCosmosUrl();
+        Mockito.doReturn("MASTER_KEY_GOES_HERE")
+            .when(cosmosHttpService).getCosmosMasterKey();
+
         List<TenantDocModel> tenantDocs = tenantDalService.readTenants();
 
         assertNotNull("Error: There should be at least 1 document!", tenantDocs);

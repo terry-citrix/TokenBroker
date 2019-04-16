@@ -15,6 +15,7 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -43,14 +44,14 @@ public class CosmosHttpClient implements CosmosHttpService {
     @Autowired
     CosmosTokenService cosmosTokenService;
 
-    private String getCosmosUrl() {
+    public String getCosmosUrl() {
         if (cosmosUrl == null) {
             cosmosUrl = System.getenv("COSMOS_URL");
         }
         return cosmosUrl;
     }
 
-    private String getCosmosMasterKey() {
+    public String getCosmosMasterKey() {
         if (cosmosUrl == null) {
             cosmosUrl = System.getenv("COSMOS_MASTER_KEY");
             if (cosmosUrl != null && !cosmosUrl.isEmpty()) {
@@ -69,22 +70,22 @@ public class CosmosHttpClient implements CosmosHttpService {
 
         String masterKeyToken = cosmosTokenService.generateMasterKeyToken(
             "GET",          // Verb
-            null,           // Resource Type
-            null,           // Resource Link
+            "dbs",          // Resource Type
+            getCosmosUrl() + "dbs/" + DATABASE, // Resource Link
             "Thu, 27 Apr 2017 00:51:12 GMT",    // Date 
             getCosmosMasterKey(),    // Key
             "master",       // Key Type
             "1.0");         // Token Version
 
-        List<Header> headers = new ArrayList<>();
-        headers.add((Header) new BasicNameValuePair(ACCEPT, ACCEPT_VALUE));
-        headers.add((Header) new BasicNameValuePair(X_MS_VERSION, X_MS_VERSION_VALUE));
-        headers.add((Header) new BasicNameValuePair(X_MS_DATE, X_MS_DATE_VALUE));
-        headers.add((Header) new BasicNameValuePair(AUTHORIZATION, masterKeyToken));
+        Header[] headers = new Header[4];
+        headers[0] = new BasicHeader(ACCEPT, ACCEPT_VALUE);
+        headers[1] = new BasicHeader(X_MS_VERSION, X_MS_VERSION_VALUE);
+        headers[2] = new BasicHeader(X_MS_DATE, X_MS_DATE_VALUE);
+        headers[3] = new BasicHeader(AUTHORIZATION, masterKeyToken);
 
-        String url = "%s/dbs/" + DATABASE + "/colls/" + COLLECTION + "/docs";
+        String url = getCosmosUrl() + "dbs/" + DATABASE + "/colls/" + COLLECTION + "/docs";
 
-        String response = getRequest(url, (Header[]) headers.toArray());
+        String response = getRequest(url, headers);
         return response;
     }
 

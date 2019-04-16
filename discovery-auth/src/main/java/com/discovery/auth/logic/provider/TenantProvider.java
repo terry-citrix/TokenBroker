@@ -9,13 +9,11 @@ import com.discovery.auth.dal.TenantDalService;
 import com.discovery.auth.logic.TenantService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TenantProvider implements TenantService {
 
-    @Qualifier("TenantDalSdk")
     @Autowired
     TenantDalService tenantDalService;
 
