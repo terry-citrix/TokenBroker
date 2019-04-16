@@ -25,6 +25,8 @@ import org.springframework.context.annotation.ComponentScan;
  * - You must specify the Master Key of the CosmosDB in an environment variable named "COSMOS_MASTER_KEY".
  * 
  * - (OPTIONAL) Run Fiddler
+ * 
+ * As such this is not suitable as a unit test, and is NOT meant to be run with every build.  Run it on-demand only.
  */
 @ComponentScan(
    {"com.discovery.auth.logic.provider", 
@@ -73,7 +75,7 @@ public class TenantDalRestTestApp {
         assertNotNull("Error: There should be at least 1 document!", tenantDocs);
         assertTrue("Error: The number of docs should be at least 1!", tenantDocs.size() > 0);
 
-        System.out.println("\nFinished the ReadTenants Test.\n");
+        System.out.println("\nFinished the ReadTenants test successfully.\n");
     }
 
     public void testReadTenantAcme() {
@@ -84,7 +86,7 @@ public class TenantDalRestTestApp {
         assertNotNull("Error: The doc should exist!", tenantDoc);
         assertTrue("Error: The returned document should match the query!", tenantDoc.getTenantName().equalsIgnoreCase("acme"));
         
-        System.out.println("\nStarting the ReadTenant Acme Test.\n");
+        System.out.println("\nFinished the ReadTenant Acme test successfully.\n");
     }
 
     public void testReadTenantFabrikam() {
@@ -95,7 +97,7 @@ public class TenantDalRestTestApp {
         assertNotNull("Error: The doc should exist!", tenantDoc);
         assertTrue("Error: The returned document should match the query!", tenantDoc.getTenantName().equalsIgnoreCase("fabrikam"));
 
-        System.out.println("\nStarting the ReadTenant Fabrikam Test.\n");
+        System.out.println("\nFinished the ReadTenant Fabrikam test successful.\n");
     }
 
 }
