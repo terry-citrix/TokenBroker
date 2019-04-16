@@ -17,6 +17,7 @@ import com.microsoft.azure.documentdb.PartitionKey;
 import com.microsoft.azure.documentdb.QueryIterable;
 import com.microsoft.azure.documentdb.RequestOptions;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
@@ -123,6 +124,11 @@ public class TenantDalSdk implements TenantDalService {
         }
 
         return tenantDocs;
+    }
+
+    @Override
+    public TenantDocModel readTenantById(String tenantId, String partitionKey) {
+        throw new NotImplementedException("TODO");
     }
 
     @Override

@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.discovery.auth.dal.model.TenantDocModel;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,18 +31,45 @@ public class TenantDalRestTest {
     @SpyBean
     CosmosHttpService cosmosHttpService;
 
-    @Ignore
+    //@Ignore
     @Test
     public void testReadTenants() {
-        Mockito.doReturn("URL_GOES_HERE")
-            .when(cosmosHttpService).getCosmosUrl();
-        Mockito.doReturn("MASTER_KEY_GOES_HERE")
-            .when(cosmosHttpService).getCosmosMasterKey();
-
         List<TenantDocModel> tenantDocs = tenantDalService.readTenants();
 
         assertNotNull("Error: There should be at least 1 document!", tenantDocs);
         assertTrue("Error: The number of docs should be at least 1!", tenantDocs.size() > 0);
+    }
+
+    @Ignore
+    @Test
+    public void testReadTenantAcme() {
+        TenantDocModel tenantDoc = tenantDalService.readTenantById("1", "acme");
+
+        assertNotNull("Error: The doc should exist!", tenantDoc);
+        assertTrue("Error: The returned document should match the query!", tenantDoc.getTenantName().equalsIgnoreCase("acme"));
+    }
+
+    @Ignore
+    @Test
+    public void testReadTenantFabrikam() {
+        TenantDocModel tenantDoc = tenantDalService.readTenantById("2", "fabrikam");
+
+        assertNotNull("Error: The doc should exist!", tenantDoc);
+        assertTrue("Error: The returned document should match the query!", tenantDoc.getTenantName().equalsIgnoreCase("fabrikam"));
+    }
+
+    @Before
+    public void beforeTestMethod() {
+        Mockito.doReturn("COSMOS_URL_GOES_HERE")
+            .when(cosmosHttpService).getCosmosUrl();
+        Mockito.doReturn("COSMOS_MASTER_KEY_GOES_HERE")
+            .when(cosmosHttpService).getCosmosMasterKey();
+
+        // For Fiddler to be able to see this traffic.
+        System.setProperty("http.proxyHost", "127.0.0.1");
+        System.setProperty("https.proxyHost", "127.0.0.1");
+        System.setProperty("http.proxyPort", "8888");
+        System.setProperty("https.proxyPort", "8888");
     }
 
     @SpringBootApplication

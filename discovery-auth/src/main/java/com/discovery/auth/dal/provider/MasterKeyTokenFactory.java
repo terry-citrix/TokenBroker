@@ -69,8 +69,9 @@ public class MasterKeyTokenFactory implements CosmosTokenService {
     private String hashHmac256(String key, String data) {
         try {
             Mac sha256_HMAC = Mac.getInstance(HMAC_SHA256);
+            byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
             SecretKeySpec secret_key = new SecretKeySpec(
-                Base64.getDecoder().decode(key),
+                Base64.getDecoder().decode(keyBytes),
                 HMAC_SHA256);
             sha256_HMAC.init(secret_key);
         

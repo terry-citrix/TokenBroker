@@ -23,6 +23,13 @@ public interface TenantDalService {
     public TenantDocModel readTenantByName(String tenantName);
 
     /**
+     * @param tenantId
+     * @param partitionKey
+     * @return the TenantDocModel
+     */
+    public TenantDocModel readTenantById(String tenantId, String partitionKey);
+
+    /**
      * @param tenantDocModel
      * @return the TenantDocModel
      */

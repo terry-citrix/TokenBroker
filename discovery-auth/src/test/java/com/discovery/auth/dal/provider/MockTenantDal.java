@@ -38,6 +38,11 @@ public class MockTenantDal implements TenantDalService {
     }
 
     @Override
+    public TenantDocModel readTenantById(String tenantId, String partitionKey) {
+        return tenantMap.get(tenantId);
+    }
+
+    @Override
     public TenantDocModel updateTenant(TenantDocModel tenantDocModel) {
         String tenantName = tenantDocModel.getTenantName();
 
