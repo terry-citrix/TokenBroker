@@ -58,8 +58,6 @@ public class TokenServiceTestApp {
 
             testReadDbUsers();
 
-            testReadDbPermissions();
-
             testGenerateReadAllToken();
 
             testGenerateReadToken("acme");
@@ -70,30 +68,13 @@ public class TokenServiceTestApp {
         };
     }
 
-    public void testReadDbPermissions() {
-        System.out.println("\nStarting the ReadDbPermissions test\n");
-
-        List<Permission> users = tokenService.readPermissions();
-        assertNotNull("Error: There was an error getting the DB permissions!", users);
-        
-        for (Permission user : users) {
-            System.out.println(user.getId() + " : " + user.getSelfLink());
-            HashMap<String, Object> userMap = user.getHashMap();
-            Set<String> keys = userMap.keySet();
-            for (String key : keys) {
-                System.out.println("   " + key + " : " + userMap.get(key));
-            }
-        }
-
-        System.out.println("\nFinished the ReadDbPermissions test successfully.\n");
-    }
-
     public void testReadDbUsers() {
         System.out.println("\nStarting the ReadDbUsers test\n");
 
         List<User> users = tokenService.readUsers();
         assertNotNull("Error: There was an error getting the DB users!", users);
         
+        System.out.println("\nUsers:");
         for (User user : users) {
             System.out.println(user.getId() + " : " + user.getSelfLink());
             HashMap<String, Object> userMap = user.getHashMap();
@@ -103,7 +84,26 @@ public class TokenServiceTestApp {
             }
         }
 
+        for (User user : users) {
+            System.out.println("\nPermission for user " + user.getId());
+            testReadDbPermissions(user);
+        }
+
         System.out.println("\nFinished the ReadDbUsers test successfully.\n");
+    }
+
+    public void testReadDbPermissions(User user) {
+        List<Permission> permissions = tokenService.readPermissions(user);
+        assertNotNull("Error: There was an error getting the DB permissions!", permissions);
+        
+        for (Permission permission : permissions) {
+            System.out.println(user.getId() + " : " + permission.getSelfLink());
+            HashMap<String, Object> permissionMap = permission.getHashMap();
+            Set<String> keys = permissionMap.keySet();
+            for (String key : keys) {
+                System.out.println("   " + key + " : " + permissionMap.get(key));
+            }
+        }
     }
 
     public void testGenerateReadAllToken() {

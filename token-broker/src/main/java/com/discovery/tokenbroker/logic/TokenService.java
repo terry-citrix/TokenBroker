@@ -15,6 +15,15 @@ public interface TokenService {
 
     public List<User> readUsers();
 
-    public List<Permission> readPermissions();
+    public List<Permission> readPermissions(User user);
+
+    public String generateMasterKeyToken(
+        String verb, 
+        String resourceType, 
+        String resourceId, 
+        String date, 
+        String key,
+        String keyType,
+        String tokenVersion);
 
 }

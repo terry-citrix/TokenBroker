@@ -1,9 +1,7 @@
 package com.discovery.tokenbroker.logic.provider;
 
-import com.microsoft.azure.documentdb.ConnectionMode;
 import com.microsoft.azure.documentdb.ConnectionPolicy;
 import com.microsoft.azure.documentdb.ConsistencyLevel;
-import com.microsoft.azure.documentdb.RetryOptions;
 import com.microsoft.azure.documentdb.DocumentClient;
 
 import org.slf4j.Logger;

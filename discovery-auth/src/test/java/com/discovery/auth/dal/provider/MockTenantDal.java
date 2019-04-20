@@ -61,6 +61,6 @@ public class MockTenantDal implements TenantDalService {
     }
 
     private String generateId() {
-        return new Integer(tenantMap.size()).toString();
+        return Integer.toString(tenantMap.size());
     }
 }

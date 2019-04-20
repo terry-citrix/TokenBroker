@@ -8,9 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.crypto.Mac;
@@ -113,9 +111,12 @@ public class TokenProvider implements TokenService {
 
         // Create the permission, which returns a Resource Token.
         try {
+            long start = System.currentTimeMillis();
             ResourceResponse<Permission> permissionResponse = documentClient
                 .upsertPermission(userLink, permission, requestOptions);
             String token = permissionResponse.getResource().toString();
+            long end = System.currentTimeMillis();
+            System.out.println("  Getting Resource Token from CosmosDB : Took " + (end - start) + " milliseconds.");
             return token;
         } catch (DocumentClientException ex) {
             LOG.error("Error: Unable to upsert Permission! Details: " + ex.getMessage());
@@ -170,11 +171,10 @@ public class TokenProvider implements TokenService {
     }
 
     @Override
-    public List<Permission> readPermissions() {
-        String databaseLink = CosmosDbUtil.constructDbLink(DATABASE);
+    public List<Permission> readPermissions(User user) {
         DocumentClient documentClient = CosmosClientFactory.getDocumentClient();
  
-        FeedResponse<Permission> feedPermissions = documentClient.readPermissions(databaseLink, null); 
+        FeedResponse<Permission> feedPermissions = documentClient.readPermissions(user.getSelfLink(), null); 
 
         QueryIterable<Permission> queryPermissions = feedPermissions.getQueryIterable();
         List<Permission> permissionList = queryPermissions.toList();
@@ -194,6 +194,7 @@ public class TokenProvider implements TokenService {
      * @param tokenVersion Currently it's always "1.0"
      * @return
      */
+    @Override
     public String generateMasterKeyToken(
         String verb, 
         String resourceType, 

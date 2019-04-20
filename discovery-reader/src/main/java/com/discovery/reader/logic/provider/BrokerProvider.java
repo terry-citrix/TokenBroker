@@ -3,10 +3,9 @@ package com.discovery.reader.logic.provider;
 import java.io.IOException;
 
 import com.discovery.reader.logic.BrokerService;
-import com.google.gson.Gson;
-import com.microsoft.azure.documentdb.PartitionKey;
-import com.microsoft.azure.documentdb.Permission;
-import com.microsoft.azure.documentdb.PermissionMode;
+import com.microsoft.azure.cosmosdb.PartitionKey;
+import com.microsoft.azure.cosmosdb.Permission;
+import com.microsoft.azure.cosmosdb.PermissionMode;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -24,14 +23,13 @@ import org.springframework.stereotype.Component;
 public class BrokerProvider implements BrokerService {
     public static final Logger LOG = LoggerFactory.getLogger(BrokerProvider.class);
 
-    private Gson gson = new Gson();
-
     @Override
     public String getReadAllToken() {
         String url = "http://localhost:8083/api/token/read";
         long start = System.currentTimeMillis();
 
         String response = getRequest(url);
+        LOG.info("Master Key Token: " + response);      // TEMP TEST
 
         long end = System.currentTimeMillis();
         System.out.println("  Reading Master Key Token from Broker service: Took " + (end - start) + " milliseconds.");
@@ -51,6 +49,7 @@ public class BrokerProvider implements BrokerService {
 
         Permission permission = new Permission(response);
 
+        // TEST TEST
         String selfLink = permission.getSelfLink();
         PermissionMode mode = permission.getPermissionMode();
         String token = permission.getToken();

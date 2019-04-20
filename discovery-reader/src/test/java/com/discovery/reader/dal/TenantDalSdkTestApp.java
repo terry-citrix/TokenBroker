@@ -51,9 +51,9 @@ public class TenantDalSdkTestApp {
 
             System.out.println("\nHi!\n");
 
-            //testReadTenantsWithMasterKeyToken();
+            testReadTenantsWithMasterKeyToken();
 
-            //testReadTenantsWithResourceToken();
+            testReadTenantsWithResourceToken();
 
             testReadTenantByName();
 

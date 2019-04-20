@@ -1,7 +1,9 @@
 package com.discovery.tokenbroker.logic;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest()
 public class TokenServiceTest {
 
+    private static final String MASTER_KEY = System.getenv("COSMOS_MASTER_KEY");
+
     @Autowired
     private TokenService tokenService;
 
@@ -22,9 +26,33 @@ public class TokenServiceTest {
         assertThat(tokenService.generateReadAllToken()).isNotNull();
     }
 
+    /**
+     * NOTE: This is not technically a unit-test, since it depends on an environment variable
+     * having been previously set (in this case "COSMOS_MASTER_KEY").
+     * 
+     * Disable this on an actual build machine.
+     */
+    @Ignore
+    @Test
+    public void generateSampleMasterKey() {
+        String output = tokenService.generateMasterKeyToken(
+            "GET", 
+            "docs", 
+            "dbs/Discovery/colls/Tenants", 
+            "Sat, 20 APR 2019 20:50:56 GMT", 
+            MASTER_KEY, 
+            "master",
+            "1.0");
+        System.out.println("Master Key Token: " + output);
+
+        String expected = "type%3Dmaster%26ver%3D1.0%26sig%3DcmCoJFbOuAGpphdjDYm%2FSg%2BAoCIHCDZR1zYJpRT14sM%3D";
+        assertEquals(expected, output);
+    }
+
     @SpringBootApplication
     @ComponentScan({
-        "com.discovery.tokenbroker.logic.provider"})
+        "com.discovery.tokenbroker.logic.provider",
+        "com.discovery.tokenbroker.dal.provider"})
     static class TestConfiguration {}
 
 }

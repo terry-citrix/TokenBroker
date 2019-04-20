@@ -92,7 +92,7 @@ public class CosmosHttpClient implements CosmosHttpService {
         String masterKeyToken = cosmosTokenService.generateMasterKeyToken(
             "GET",          // Verb
             "docs",         // Resource Type
-            "dbs/" + DATABASE + "/colls/" + COLLECTION + "/docs/" + "1",    // TEMP FIXME TODO: Hard-code it to 1 for now.
+            "dbs/" + DATABASE + "/colls/" + COLLECTION + "/docs/" + tenantId,
             dateValue,
             getCosmosMasterKey(),
             "master",       // Key Type

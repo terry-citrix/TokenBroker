@@ -1,6 +1,6 @@
 package com.discovery.reader.dal.provider;
 
-import com.microsoft.azure.documentdb.PermissionMode;
+import com.microsoft.azure.cosmosdb.PermissionMode;
 import org.springframework.stereotype.Component;
 
 /**

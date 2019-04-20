@@ -1,6 +1,6 @@
 package com.discovery.reader.logic;
 
-import com.microsoft.azure.documentdb.Permission;
+import com.microsoft.azure.cosmosdb.Permission;
 
 public interface BrokerService {
 
