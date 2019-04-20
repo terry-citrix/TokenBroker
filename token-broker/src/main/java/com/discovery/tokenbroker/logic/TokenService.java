@@ -2,7 +2,8 @@ package com.discovery.tokenbroker.logic;
 
 import java.util.List;
 
-import com.microsoft.azure.cosmosdb.User;
+import com.microsoft.azure.documentdb.Permission;
+import com.microsoft.azure.documentdb.User;
 
 public interface TokenService {
     
@@ -13,5 +14,7 @@ public interface TokenService {
     public String generateWriteToken(String partitionKey);
 
     public List<User> readUsers();
+
+    public List<Permission> readPermissions();
 
 }

@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import com.microsoft.azure.cosmosdb.User;
+import com.microsoft.azure.documentdb.Permission;
+import com.microsoft.azure.documentdb.User;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +58,8 @@ public class TokenServiceTestApp {
 
             testReadDbUsers();
 
+            testReadDbPermissions();
+
             testGenerateReadAllToken();
 
             testGenerateReadToken("acme");
@@ -65,6 +68,24 @@ public class TokenServiceTestApp {
 
             System.out.println("\nBye!\n");
         };
+    }
+
+    public void testReadDbPermissions() {
+        System.out.println("\nStarting the ReadDbPermissions test\n");
+
+        List<Permission> users = tokenService.readPermissions();
+        assertNotNull("Error: There was an error getting the DB permissions!", users);
+        
+        for (Permission user : users) {
+            System.out.println(user.getId() + " : " + user.getSelfLink());
+            HashMap<String, Object> userMap = user.getHashMap();
+            Set<String> keys = userMap.keySet();
+            for (String key : keys) {
+                System.out.println("   " + key + " : " + userMap.get(key));
+            }
+        }
+
+        System.out.println("\nFinished the ReadDbPermissions test successfully.\n");
     }
 
     public void testReadDbUsers() {

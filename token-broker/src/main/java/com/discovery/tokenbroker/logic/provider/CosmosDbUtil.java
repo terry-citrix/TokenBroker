@@ -1,6 +1,6 @@
 package com.discovery.tokenbroker.logic.provider;
 
-import com.microsoft.azure.cosmosdb.PermissionMode;
+import com.microsoft.azure.documentdb.PermissionMode;
 import org.springframework.stereotype.Component;
 
 /**

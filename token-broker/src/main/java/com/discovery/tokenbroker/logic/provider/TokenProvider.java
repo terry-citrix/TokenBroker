@@ -18,26 +18,25 @@ import javax.crypto.spec.SecretKeySpec;
 
 import com.discovery.tokenbroker.logic.TokenService;
 import com.google.gson.Gson;
-import com.microsoft.azure.cosmosdb.rx.AsyncDocumentClient;
-import com.microsoft.azure.cosmosdb.DocumentClientException;
-import com.microsoft.azure.cosmosdb.FeedOptions;
-import com.microsoft.azure.cosmosdb.FeedResponse;
-import com.microsoft.azure.cosmosdb.PartitionKey;
-import com.microsoft.azure.cosmosdb.Permission;
-import com.microsoft.azure.cosmosdb.PermissionMode;
-import com.microsoft.azure.cosmosdb.RequestOptions;
-import com.microsoft.azure.cosmosdb.ResourceResponse;
-import com.microsoft.azure.cosmosdb.SqlParameter;
-import com.microsoft.azure.cosmosdb.SqlParameterCollection;
-import com.microsoft.azure.cosmosdb.SqlQuerySpec;
-import com.microsoft.azure.cosmosdb.User;
+import com.microsoft.azure.documentdb.DocumentClient;
+import com.microsoft.azure.documentdb.DocumentClientException;
+import com.microsoft.azure.documentdb.FeedOptions;
+import com.microsoft.azure.documentdb.FeedResponse;
+import com.microsoft.azure.documentdb.PartitionKey;
+import com.microsoft.azure.documentdb.Permission;
+import com.microsoft.azure.documentdb.PermissionMode;
+import com.microsoft.azure.documentdb.QueryIterable;
+import com.microsoft.azure.documentdb.RequestOptions;
+import com.microsoft.azure.documentdb.ResourceResponse;
+import com.microsoft.azure.documentdb.SqlParameter;
+import com.microsoft.azure.documentdb.SqlParameterCollection;
+import com.microsoft.azure.documentdb.SqlQuerySpec;
+import com.microsoft.azure.documentdb.User;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import rx.Observable;
 
 @Component
 public class TokenProvider implements TokenService {
@@ -94,7 +93,7 @@ public class TokenProvider implements TokenService {
         Permission permission = new Permission();
         permission.setPermissionMode(permissionMode);
         permission.setResourceLink(CosmosDbUtil.constructCollectionLink(DATABASE, COLLECTION));
-        permission.setId(permission.getResourceLink().replace("/", ".") + "." + permissionMode.name());
+        permission.setId(permission.getResourceLink().replace("/", "."));
         permission.setResourcePartitionKey(new PartitionKey(partitionKey));
 
         // Set the request options
@@ -103,19 +102,25 @@ public class TokenProvider implements TokenService {
         requestOptions.setPartitionKey(new PartitionKey(partitionKey));
 
         // We set the username to be the partition key name followed by the access.
-        String userLink;
-        AsyncDocumentClient documentClient = CosmosClientFactory.getDocumentClient();
-        userLink = upsertUser(partitionKey + "." + permissionMode.name(), DATABASE, documentClient);
+        String username = partitionKey + "." + permissionMode.name();
+
+        DocumentClient documentClient = CosmosClientFactory.getDocumentClient();
+        String userLink = upsertUser(username, DATABASE, documentClient);
         if (StringUtils.isEmpty(userLink)) {
             LOG.error("Error: Without the user link we can't generate a Resource Token!");
             return null;
         }
 
         // Create the permission, which returns a Resource Token.
-        Observable<ResourceResponse<Permission>> observable = documentClient
-            .upsertPermission(userLink, permission, requestOptions);
-        String token = observable.toBlocking().single().getResource().toString();
-        return token;        
+        try {
+            ResourceResponse<Permission> permissionResponse = documentClient
+                .upsertPermission(userLink, permission, requestOptions);
+            String token = permissionResponse.getResource().toString();
+            return token;
+        } catch (DocumentClientException ex) {
+            LOG.error("Error: Unable to upsert Permission! Details: " + ex.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -126,27 +131,27 @@ public class TokenProvider implements TokenService {
      * @return
      * @throws DocumentClientException
      */
-    private String upsertUser(String userName, String cosmosDbName, AsyncDocumentClient documentClient) {
+    private String upsertUser(String userName, String cosmosDbName, DocumentClient documentClient) {
         String databaseLink = CosmosDbUtil.constructDbLink(cosmosDbName);
 
-        List<User> userList = new ArrayList<>();
-        Observable<FeedResponse<User>> observable = documentClient.queryUsers(
+        FeedResponse<User> feedUsers = documentClient.queryUsers(
             databaseLink,
             new SqlQuerySpec("SELECT * FROM root r WHERE r.id=@id",
                 new SqlParameterCollection(new SqlParameter("@id", userName))), 
             new FeedOptions());
 
-        Iterator<FeedResponse<User>> iterator = observable.toBlocking().getIterator();
-
-        while (iterator.hasNext()) {
-            FeedResponse<User> page = iterator.next();
-            userList.addAll(page.getResults());
-        }
+        QueryIterable<User> queryUsers = feedUsers.getQueryIterable();
+        List<User> userList = queryUsers.toList();
 
         if (userList.isEmpty()) {
             User user = new User();
             user.setId(userName);
-            documentClient.createUser(databaseLink, user, new RequestOptions());
+            try {
+                documentClient.createUser(databaseLink, user, new RequestOptions());
+            } catch (DocumentClientException ex) {
+                LOG.error("Error: Unable to create user! Details: " + ex.getMessage());
+                return null;
+            }
         }
         return CosmosDbUtil.constructUserLink(cosmosDbName, userName);
     }
@@ -154,16 +159,27 @@ public class TokenProvider implements TokenService {
     @Override
     public List<User> readUsers() {
         String databaseLink = CosmosDbUtil.constructDbLink(DATABASE);
-        AsyncDocumentClient documentClient = CosmosClientFactory.getDocumentClient();
+        DocumentClient documentClient = CosmosClientFactory.getDocumentClient();
  
-        Observable<FeedResponse<User>> observable = documentClient.readUsers(databaseLink, null); 
-        Iterator<FeedResponse<User>> iterator = observable.toBlocking().getIterator();
-        List<User> userList = new ArrayList<>();
-        while (iterator.hasNext()) {
-            FeedResponse<User> page = iterator.next();
-            userList.addAll(page.getResults());
-        }
+        FeedResponse<User> feedUsers = documentClient.readUsers(databaseLink, null); 
+
+        QueryIterable<User> queryUsers = feedUsers.getQueryIterable();
+        List<User> userList = queryUsers.toList();
+
         return userList;
+    }
+
+    @Override
+    public List<Permission> readPermissions() {
+        String databaseLink = CosmosDbUtil.constructDbLink(DATABASE);
+        DocumentClient documentClient = CosmosClientFactory.getDocumentClient();
+ 
+        FeedResponse<Permission> feedPermissions = documentClient.readPermissions(databaseLink, null); 
+
+        QueryIterable<Permission> queryPermissions = feedPermissions.getQueryIterable();
+        List<Permission> permissionList = queryPermissions.toList();
+
+        return permissionList;
     }
     
     /**

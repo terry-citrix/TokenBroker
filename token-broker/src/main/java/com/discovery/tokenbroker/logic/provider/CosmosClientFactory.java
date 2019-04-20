@@ -1,10 +1,10 @@
 package com.discovery.tokenbroker.logic.provider;
 
-import com.microsoft.azure.cosmosdb.ConnectionMode;
-import com.microsoft.azure.cosmosdb.ConnectionPolicy;
-import com.microsoft.azure.cosmosdb.ConsistencyLevel;
-import com.microsoft.azure.cosmosdb.RetryOptions;
-import com.microsoft.azure.cosmosdb.rx.AsyncDocumentClient;
+import com.microsoft.azure.documentdb.ConnectionMode;
+import com.microsoft.azure.documentdb.ConnectionPolicy;
+import com.microsoft.azure.documentdb.ConsistencyLevel;
+import com.microsoft.azure.documentdb.RetryOptions;
+import com.microsoft.azure.documentdb.DocumentClient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +15,9 @@ class CosmosClientFactory {
     private static final String HOST = System.getenv("COSMOS_URL");
     private static final String MASTER_KEY = System.getenv("COSMOS_MASTER_KEY");
 
-    private static AsyncDocumentClient documentClient = null;
+    private static DocumentClient documentClient = null;
 
-    public static AsyncDocumentClient getDocumentClient() {
+    public static DocumentClient getDocumentClient() {
         if (MASTER_KEY == null || MASTER_KEY.isEmpty()) {
             LOG.error("No CosmosDB Master Key was retrieved! A Master Key is needed in order to continue.");
             return null;
@@ -29,18 +29,11 @@ class CosmosClientFactory {
         }
 
         if (documentClient == null) {
-            ConnectionPolicy connectionPolicy = new ConnectionPolicy();
-            connectionPolicy.setConnectionMode(ConnectionMode.Direct);
-            RetryOptions retryOptions = new RetryOptions();
-            retryOptions.setMaxRetryAttemptsOnThrottledRequests(3);
-            retryOptions.setMaxRetryWaitTimeInSeconds(9);
-            connectionPolicy.setRetryOptions(retryOptions);
-            documentClient = new AsyncDocumentClient.Builder()
-                .withServiceEndpoint(HOST)
-                .withMasterKeyOrResourceToken(MASTER_KEY)
-                .withConnectionPolicy(ConnectionPolicy.GetDefault())
-                .withConsistencyLevel(ConsistencyLevel.Session)
-                .build();
+            documentClient = new DocumentClient(
+                HOST, 
+                MASTER_KEY,
+                ConnectionPolicy.GetDefault(), 
+                ConsistencyLevel.Session);
         }
 
         return documentClient;
