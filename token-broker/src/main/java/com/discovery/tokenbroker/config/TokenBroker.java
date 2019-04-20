@@ -1,4 +1,4 @@
-package com.discovery.reader.config;
+package com.discovery.tokenbroker.config;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -9,14 +9,13 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan({
-    "com.discovery.reader.config",
-    "com.discovery.reader.controller",
-    "com.discovery.reader.dal.provider",
-    "com.discovery.reader.logic.provider"})
-public class DiscoveryReader {
+    "com.discovery.tokenbroker.config",
+    "com.discovery.tokenbroker.controller", 
+    "com.discovery.tokenbroker.logic.provider"})
+public class TokenBroker {
 
     public static void main(String[] args) {
-        SpringApplication.run(DiscoveryReader.class, args);
+        SpringApplication.run(TokenBroker.class, args);
     }
 
     @Bean

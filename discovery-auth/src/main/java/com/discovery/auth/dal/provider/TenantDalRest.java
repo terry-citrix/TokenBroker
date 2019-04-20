@@ -1,14 +1,11 @@
 package com.discovery.auth.dal.provider;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.discovery.auth.dal.model.TenantDocModel;
 import com.discovery.auth.dal.model.TenantDocsModel;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.discovery.auth.dal.CosmosHttpService;
 import com.discovery.auth.dal.TenantDalService;
 

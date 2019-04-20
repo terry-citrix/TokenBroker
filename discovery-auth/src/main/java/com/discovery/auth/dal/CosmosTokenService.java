@@ -1,6 +1,7 @@
 package com.discovery.auth.dal;
 
 public interface CosmosTokenService {
+    
     /**
      * Creates a Master Key Token, similar to a Resource Token.
      * 

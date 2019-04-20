@@ -8,6 +8,7 @@
  */
 rootProject.name = 'tokenbroker'
 
+include 'token-broker'
 include 'discovery-auth'
 include 'discovery-reader'
 include 'discovery-writer'

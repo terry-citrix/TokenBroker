@@ -1,7 +1,7 @@
 # TokenBroker
 
-TokenBroker is a simple implementation of the Resource Token Broker concept.  The  
-[Resource Token Broker concept](/docs/TokenBrokerConcept.md) allows for increased tenant isolation in multi-tenant
+TokenBroker is a simple implementation of the Token Broker concept.  The  
+[Token Broker concept](/docs/TokenBrokerConcept.md) allows for increased tenant isolation in multi-tenant
 services using either Azure CosmosDB Resource Tokens (or alternatively Azure Storage Shared Access Signatures).
 
 For this demo we'll be using Java SpringBoot services 
@@ -17,13 +17,16 @@ It is a set of small services:
 
 - DiscoveryAuth: A simple authentication service for doing username/password auth. Customers can
 register in order to create a tenant record. After the customer has authenticated this service 
-generates a Java Web Token (JWT) that allows the customer to authenticate to other services.
+generates a JSON Web Token (JWT) that allows the customer to authenticate to other services.
 
 - DiscoveryReader: A simple service that only has read-access to our data store. Could even be 
 placed behind a Content Delivery Network (CDN).
 
 - DiscoveryWriter: Requires customer authentication for each API call. Allows that customer to
 edit their tenant record (and no others). Has no inherent access to the data store itself.
+
+- TokenBroker: Its only task is to validate the caller, ensure that the are allowed to do
+what they're requesting, and then generate and return a CosmosDB Resource Token.
 
 ### Code Changes
 Uses the GitFlow Workflow (see https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow).

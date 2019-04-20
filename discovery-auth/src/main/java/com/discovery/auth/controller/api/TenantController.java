@@ -26,6 +26,7 @@ public class TenantController {
     public List<TenantModel> getTenants() {
         return tenantService.readTenants();
     }
+    
     @GetMapping("{tenantName}")
     public TenantModel getTenantByName(@PathVariable String tenantName) {
         return tenantService.readTenantByName(tenantName);
