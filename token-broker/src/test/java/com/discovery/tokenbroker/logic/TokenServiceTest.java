@@ -19,7 +19,7 @@ public class TokenServiceTest {
     private static final String MASTER_KEY = System.getenv("COSMOS_MASTER_KEY");
 
     @Autowired
-    private TokenService tokenService;
+    private MasterTokenService tokenService;
 
     @Test
     public void contextLoads() {

@@ -54,7 +54,7 @@ public class CosmosHttpClient implements CosmosHttpService {
         }
 
         String dateValue = getDateValue();
-        String token = brokerService.getReadAllToken();
+        String token = brokerService.getReadMasterToken();
 
         // Sample: 
         // Accept: application/json

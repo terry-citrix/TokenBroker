@@ -3,9 +3,7 @@ package com.discovery.reader.logic.provider;
 import java.io.IOException;
 
 import com.discovery.reader.logic.BrokerService;
-import com.microsoft.azure.cosmosdb.PartitionKey;
 import com.microsoft.azure.cosmosdb.Permission;
-import com.microsoft.azure.cosmosdb.PermissionMode;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -24,12 +22,11 @@ public class BrokerProvider implements BrokerService {
     public static final Logger LOG = LoggerFactory.getLogger(BrokerProvider.class);
 
     @Override
-    public String getReadAllToken() {
-        String url = "http://localhost:8083/api/token/read";
+    public String getReadMasterToken() {
+        String url = "http://localhost:8083/api/token/master/read";
         long start = System.currentTimeMillis();
 
         String response = getRequest(url);
-        LOG.info("Master Key Token: " + response);      // TEMP TEST
 
         long end = System.currentTimeMillis();
         System.out.println("  Reading Master Key Token from Broker service: Took " + (end - start) + " milliseconds.");
@@ -37,23 +34,21 @@ public class BrokerProvider implements BrokerService {
     }
 
     @Override
-    public Permission getReadToken(String tenantName) {
-        String url = "http://localhost:8083/api/token/read/" + tenantName;
+    public Permission getReadResourceToken() {
+        return null;
+    }
+
+    @Override
+    public Permission getReadResourceToken(String tenantName) {
+        String url = "http://localhost:8083/api/token/resource/read/" + tenantName;
         long start = System.currentTimeMillis();
 
         String response = getRequest(url);
 
         long end = System.currentTimeMillis();
-        System.out.println("  Resource Token: " + response);
         System.out.println("  Reading Resource Token from Broker service : Took " + (end - start) + " milliseconds.");
 
         Permission permission = new Permission(response);
-
-        // TEST TEST
-        String selfLink = permission.getSelfLink();
-        PermissionMode mode = permission.getPermissionMode();
-        String token = permission.getToken();
-        PartitionKey partitionKey = permission.getResourcePartitionKey();
 
         return permission;
     }

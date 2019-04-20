@@ -5,7 +5,7 @@ import java.util.List;
 import com.microsoft.azure.documentdb.Permission;
 import com.microsoft.azure.documentdb.User;
 
-public interface TokenService {
+public interface ResourceTokenService {
     
     public String generateReadAllToken();
 
@@ -16,14 +16,5 @@ public interface TokenService {
     public List<User> readUsers();
 
     public List<Permission> readPermissions(User user);
-
-    public String generateMasterKeyToken(
-        String verb, 
-        String resourceType, 
-        String resourceId, 
-        String date, 
-        String key,
-        String keyType,
-        String tokenVersion);
 
 }

@@ -23,34 +23,34 @@ public class TenantController {
 
     @GetMapping("tenant")
     public List<TenantModel> getTenants() {
-        long start = System.currentTimeMillis();
+        //long start = System.currentTimeMillis();
 
         List<TenantModel> tenants = tenantService.readTenants(true);
 
-        long end = System.currentTimeMillis();
-        System.out.println("GET /api/tenant : Took " + (end - start) + " milliseconds.");
+        //long end = System.currentTimeMillis();
+        //System.out.println("GET /api/tenant : Took " + (end - start) + " milliseconds.");
         return tenants;
     }
     
     @GetMapping("tenant/{tenantName}")
     public TenantModel getTenantByName(@PathVariable String tenantName) {
-        long start = System.currentTimeMillis();
+        //long start = System.currentTimeMillis();
 
         TenantModel tenant = tenantService.readTenantByName(tenantName);
 
-        long end = System.currentTimeMillis();
-        System.out.println("GET /api/tenant/" + tenantName +" : Took " + (end - start) + " milliseconds.");
+        //long end = System.currentTimeMillis();
+        //System.out.println("GET /api/tenant/" + tenantName +" : Took " + (end - start) + " milliseconds.");
         return tenant;
     }
 
     @GetMapping("tenant-resourcetoken")
     public List<TenantModel> getTenantsWithMasterKey() {
-        long start = System.currentTimeMillis();
+        //long start = System.currentTimeMillis();
 
         List<TenantModel> tenants = tenantService.readTenants(false);
 
-        long end = System.currentTimeMillis();
-        System.out.println("GET /api/tenant-resourcetoken : Took " + (end - start) + " milliseconds.");
+        //long end = System.currentTimeMillis();
+        //System.out.println("GET /api/tenant-resourcetoken : Took " + (end - start) + " milliseconds.");
         return tenants;
     }
 

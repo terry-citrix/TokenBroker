@@ -48,7 +48,10 @@ public class TokenServiceTestApp {
     }
 
     @Autowired
-    TokenService tokenService;
+    ResourceTokenService resourceTokenService;
+
+    @Autowired
+    MasterTokenService masterTokenService;
 
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
@@ -58,11 +61,11 @@ public class TokenServiceTestApp {
 
             testReadDbUsers();
 
-            testGenerateReadAllToken();
+            testGenerateReadMasterToken();
 
-            testGenerateReadToken("acme");
+            testGenerateReadResourceToken("acme");
 
-            testGenerateWriteToken("acme");
+            testGenerateWriteResourceToken("acme");
 
             System.out.println("\nBye!\n");
         };
@@ -71,7 +74,7 @@ public class TokenServiceTestApp {
     public void testReadDbUsers() {
         System.out.println("\nStarting the ReadDbUsers test\n");
 
-        List<User> users = tokenService.readUsers();
+        List<User> users = resourceTokenService.readUsers();
         assertNotNull("Error: There was an error getting the DB users!", users);
         
         System.out.println("\nUsers:");
@@ -93,7 +96,7 @@ public class TokenServiceTestApp {
     }
 
     public void testReadDbPermissions(User user) {
-        List<Permission> permissions = tokenService.readPermissions(user);
+        List<Permission> permissions = resourceTokenService.readPermissions(user);
         assertNotNull("Error: There was an error getting the DB permissions!", permissions);
         
         for (Permission permission : permissions) {
@@ -106,40 +109,40 @@ public class TokenServiceTestApp {
         }
     }
 
-    public void testGenerateReadAllToken() {
-        System.out.println("\nStarting the ReadAllToken test.\n");
+    public void testGenerateReadMasterToken() {
+        System.out.println("\nStarting the ReadMasterToken test.\n");
 
-        String readToken = tokenService.generateReadAllToken();
+        String readToken = masterTokenService.generateReadAllToken();
+        LOG.info("The master token is: " + readToken);
+
+        assertNotNull("Error: No resource token was returned!", readToken);
+        assertTrue("Error: The resource token is empty!", !readToken.isEmpty());
+
+        System.out.println("\nFinished the ReadMasterToken test successfully.\n");
+    }
+
+    public void testGenerateReadResourceToken(String tenantName) {
+        System.out.println("\nStarting the ReadResourceToken Test for tenant '" + tenantName + "'.\n");
+
+        String readToken = resourceTokenService.generateReadToken(tenantName);
         LOG.info("The resource token is: " + readToken);
 
         assertNotNull("Error: No resource token was returned!", readToken);
         assertTrue("Error: The resource token is empty!", !readToken.isEmpty());
 
-        System.out.println("\nFinished the ReadAllToken test successfully.\n");
+        System.out.println("\nFinished the ReadResourceToken test successfully.\n");
     }
 
-    public void testGenerateReadToken(String tenantName) {
-        System.out.println("\nStarting the ReadToken Test for tenant '" + tenantName + "'.\n");
+    public void testGenerateWriteResourceToken(String tenantName) {
+        System.out.println("\nStarting the WriteResourceToken Test for tenant '" + tenantName + "'.\n");
 
-        String readToken = tokenService.generateReadToken(tenantName);
-        LOG.info("The resource token is: " + readToken);
-
-        assertNotNull("Error: No resource token was returned!", readToken);
-        assertTrue("Error: The resource token is empty!", !readToken.isEmpty());
-
-        System.out.println("\nFinished the ReadToken test successfully.\n");
-    }
-
-    public void testGenerateWriteToken(String tenantName) {
-        System.out.println("\nStarting the WriteToken Test for tenant '" + tenantName + "'.\n");
-
-        String writeToken = tokenService.generateWriteToken(tenantName);
+        String writeToken = resourceTokenService.generateWriteToken(tenantName);
         LOG.info("The resource token is: " + writeToken);
 
         assertNotNull("Error: No resource token was returned!", writeToken);
         assertTrue("Error: The resource token is empty!", !writeToken.isEmpty());
 
-        System.out.println("\nFinished the WriteToken test successfully.\n");
+        System.out.println("\nFinished the WriteResourceToken test successfully.\n");
     }
 
 }

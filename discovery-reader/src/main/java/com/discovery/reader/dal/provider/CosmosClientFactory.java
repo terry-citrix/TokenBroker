@@ -1,12 +1,15 @@
 package com.discovery.reader.dal.provider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.microsoft.azure.cosmosdb.ConnectionPolicy;
 import com.microsoft.azure.cosmosdb.ConsistencyLevel;
 import com.microsoft.azure.cosmosdb.rx.AsyncDocumentClient;
 import com.microsoft.azure.cosmosdb.Permission;
+import com.microsoft.azure.cosmosdb.PermissionMode;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +21,7 @@ class CosmosClientFactory {
     private static final String MASTER_KEY = System.getenv("COSMOS_MASTER_KEY");
 
     private static AsyncDocumentClient documentClient = null;
+    private static Map<String, AsyncDocumentClient> asyncClients = null;
 
     public static AsyncDocumentClient getDocumentClient() {
         if (MASTER_KEY == null || MASTER_KEY.isEmpty()) {
@@ -51,14 +55,45 @@ class CosmosClientFactory {
 
         List<Permission> permissions = new ArrayList<>();
         permissions.add(resourceToken);
-        documentClient = new AsyncDocumentClient.Builder()
+        AsyncDocumentClient docClient = new AsyncDocumentClient.Builder()
             .withServiceEndpoint(HOST)
             .withPermissionFeed(permissions)
             .withConnectionPolicy(ConnectionPolicy.GetDefault())
             .withConsistencyLevel(ConsistencyLevel.Session)
             .build();
 
-        return documentClient;
+        return docClient;
+    }
+
+    public static AsyncDocumentClient getCachedClientForPermission(String tenantName, PermissionMode permissionMode, Permission resourceToken) {
+        if (HOST == null || HOST.isEmpty()) {
+            LOG.error("No CosmosDB URL was retrieved! A URL for the DB is needed in order to continue.");
+            return null;
+        }
+
+        if (asyncClients == null) {
+            asyncClients = new HashMap<String, AsyncDocumentClient>();
+        }
+
+        // Construct the key to our hash map.
+        String key = tenantName + "." + permissionMode.name();
+
+        AsyncDocumentClient docClient = asyncClients.get(key);
+
+        if (docClient == null) {
+            List<Permission> permissions = new ArrayList<>();
+            permissions.add(resourceToken);
+            docClient = new AsyncDocumentClient.Builder()
+                .withServiceEndpoint(HOST)
+                .withPermissionFeed(permissions)
+                .withConnectionPolicy(ConnectionPolicy.GetDefault())
+                .withConsistencyLevel(ConsistencyLevel.Session)
+                .build();
+
+            asyncClients.put(key, docClient);
+        }
+
+        return docClient;
     }
 
 }

@@ -62,14 +62,17 @@ public class TenantDalSdk implements TenantDalService {
     }
 
     private List<TenantDocModel> readTenantsWithResourceToken() {
-        AsyncDocumentClient documentClient = CosmosClientFactory.getDocumentClient();
+        // Get the CosmosDB Resource Token first.
+        Permission permission = brokerService.getReadResourceToken();
+
+        AsyncDocumentClient docClient = CosmosClientFactory.getDocumentClientForPermission(permission);
         List<TenantDocModel> tenantDocs = new ArrayList<TenantDocModel>();
 
         FeedOptions options = new FeedOptions();
         options.setEnableCrossPartitionQuery(true);
 
         // Retrieve the TenantDocModel documents.
-        Observable<FeedResponse<Document>> observable = documentClient
+        Observable<FeedResponse<Document>> observable = docClient
             .queryDocuments(CosmosDbUtil.constructCollectionLink(DATABASE_ID, COLLECTION_ID),
                 "SELECT * FROM " + COLLECTION_ID,
                 options);
@@ -105,11 +108,11 @@ public class TenantDalSdk implements TenantDalService {
 
     private Document getDocumentByTenantName(String tenantName) {
         // Get the CosmosDB Resource Token first.
-        Permission permission = brokerService.getReadToken(tenantName);
+        Permission permission = brokerService.getReadResourceToken(tenantName);
 
         // Now get the actual Tenant doc.
         AsyncDocumentClient docClient = CosmosClientFactory.getDocumentClientForPermission(permission);
-        
+
         FeedOptions options = new FeedOptions();
         options.setPartitionKey(new PartitionKey(tenantName));
 
@@ -120,14 +123,15 @@ public class TenantDalSdk implements TenantDalService {
                     "SELECT * FROM " + COLLECTION_ID + " c WHERE c.tenantName='" + tenantName + "'", 
                     options);
         Iterator<FeedResponse<Document>> iterator = observable.toBlocking().getIterator();
-        long end = System.currentTimeMillis();
-        System.out.println("  Reading Document from CosmosDB : Took " + (end - start) + " milliseconds.");
 
         List<Document> documents = new ArrayList<>();
         while (iterator.hasNext()) {
             FeedResponse<Document> page = iterator.next();
             documents.addAll(page.getResults());
         }
+
+        long end = System.currentTimeMillis();
+        System.out.println("  Reading Document from CosmosDB : Took " + (end - start) + " milliseconds.");
 
         if (documents.size() != 1) {
             LOG.error("Error: There should have only been 1 tenant doc! Instead there were " + documents.size());

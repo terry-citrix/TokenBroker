@@ -1,6 +1,6 @@
 package com.discovery.tokenbroker.controller;
 
-import com.discovery.tokenbroker.logic.TokenService;
+import com.discovery.tokenbroker.logic.ResourceTokenService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/token")
-public class TokenController {
-    public static final Logger LOG = LoggerFactory.getLogger(TokenController.class);
+@RequestMapping("api/token/resource")
+public class ResourceTokenController {
+    public static final Logger LOG = LoggerFactory.getLogger(ResourceTokenController.class);
 
     @Autowired
-    TokenService tokenService;
+    ResourceTokenService tokenService;
 
     @GetMapping("read")
     public String generateAllReadToken() {
@@ -25,7 +25,7 @@ public class TokenController {
         String token = tokenService.generateReadAllToken();
 
         long end = System.currentTimeMillis();
-        System.out.println("GET /api/token/read : Took " + (end - start) + " milliseconds.");
+        System.out.println("GET /api/token/resource/read : Took " + (end - start) + " milliseconds.");
         return token;
     }
 
@@ -36,7 +36,7 @@ public class TokenController {
         String token = tokenService.generateReadToken(tenantName);
 
         long end = System.currentTimeMillis();
-        System.out.println("GET /api/token/read/" + tenantName + " : Took " + (end - start) + " milliseconds.");
+        System.out.println("GET /api/token/resource/read/" + tenantName + " : Took " + (end - start) + " milliseconds.");
         return token;
     }
 
@@ -47,7 +47,7 @@ public class TokenController {
         String token = tokenService.generateWriteToken(tenantName);
         
         long end = System.currentTimeMillis();
-        System.out.println("GET /api/token/all/" + tenantName + " : Took " + (end - start) + " milliseconds.");
+        System.out.println("GET /api/token/resource/all/" + tenantName + " : Took " + (end - start) + " milliseconds.");
         return token;
     }
 
