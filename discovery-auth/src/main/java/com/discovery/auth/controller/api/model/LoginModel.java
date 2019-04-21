@@ -1,17 +1,8 @@
-package com.discovery.auth.controller.view.model;
+package com.discovery.auth.controller.api.model;
 
-public class RegisterModel {
-    private String tenantName;
+public class LoginModel {
     private String username;
     private String password;
-
-    public String getTenantName() {
-        return tenantName;
-    }
-
-    public void setTenantName(String tenantName) {
-        this.tenantName = tenantName;
-    }
 
     public String getUsername() {
         return username;

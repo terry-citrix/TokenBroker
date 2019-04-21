@@ -28,7 +28,11 @@ public class RegisterController {
     @PostMapping("/register")
     public String submitForm(@ModelAttribute RegisterModel registerModel) {
         LOG.info("Username is {} and password is {}", registerModel.getUsername(), registerModel.getPassword());
-        identityProvider.addUser(registerModel.getUsername(), registerModel.getPassword(), "USER");
+        identityProvider.addUser(
+            registerModel.getTenantName(),
+            registerModel.getUsername(), 
+            registerModel.getPassword(), 
+            "USER");
         return "home";
     }
 

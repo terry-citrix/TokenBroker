@@ -17,13 +17,13 @@ public class InMemoryIdentityProvider implements IdentityProviderService {
     private static List<UserModel> users = new ArrayList<UserModel>();
 
     @Override
-    public void addUser(String username, String password, String role) {
+    public void addUser(String tenantName, String username, String password, String role) {
         LOG.info("Adding user '{}'", username);
 
         if (getUser(username) != null) {
             LOG.info("User already exists!");
         } else {
-            users.add(new UserModel(username, password, role));
+            users.add(new UserModel(tenantName, username, password, role));
         }
     }
     

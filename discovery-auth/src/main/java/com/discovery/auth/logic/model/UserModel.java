@@ -1,16 +1,26 @@
 package com.discovery.auth.logic.model;
 
 public class UserModel {
+    private String tenantName;
     private String username;
     private String password;
     private String role;
 
-    public UserModel(String username, String password, String role) {
+    public UserModel(String tenantName, String username, String password, String role) {
+        this.tenantName = tenantName;
         this.username = username;
         this.password = password;
         this.role = role;
     }
 
+    public String getTenantName() {
+        return tenantName;
+    }
+
+    public void setTenantName(String tenantName) {
+        this.tenantName = tenantName;
+    }
+    
     public String getUsername() {
         return username;
     }

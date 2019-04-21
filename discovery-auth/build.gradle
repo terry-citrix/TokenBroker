@@ -35,6 +35,10 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("com.google.code.gson:gson:2.8.5")
     compile("com.microsoft.azure:azure-documentdb:2.2.2")
+    compile("io.jsonwebtoken:jjwt-api:0.10.5")
+
+    runtime("io.jsonwebtoken:jjwt-impl:0.10.5")
+    runtime("io.jsonwebtoken:jjwt-jackson:0.10.5")
 
     testCompile("junit:junit")
     testCompile("org.springframework.boot:spring-boot-starter-test")

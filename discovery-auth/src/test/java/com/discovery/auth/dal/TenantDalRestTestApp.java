@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -47,9 +46,6 @@ public class TenantDalRestTestApp {
     @Qualifier("TenantDalRest")
     @Autowired
     TenantDalService tenantDalService;
-
-    @SpyBean
-    CosmosHttpService cosmosHttpService;
 
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {

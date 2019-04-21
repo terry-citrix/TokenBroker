@@ -30,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .logout()
                 .permitAll()
                 .and()
-            .csrf().disable();  // You should keep this for HTML POSTs, but disable it for API POSTs
+            .csrf().disable();
     }
 
     @Override
