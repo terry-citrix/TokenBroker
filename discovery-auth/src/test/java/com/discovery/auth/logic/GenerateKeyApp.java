@@ -58,8 +58,8 @@ public class GenerateKeyApp {
         Key importedKey = Keys.hmacShaKeyFor(importedKeyBytes);
 
         byte[] importedEncodedKeyBytes = importedKey.getEncoded();
-        String importedKeyString = Base64.getEncoder().encodeToString(keyBytes);
-        System.out.println("Hmac256 secret from Imported Key: " + keyString);
+        String importedKeyString = Base64.getEncoder().encodeToString(importedEncodedKeyBytes);
+        System.out.println("Hmac256 secret from Imported Key: " + importedKeyString);
 
         buildAndValidate(importedKey);
     }
