@@ -69,10 +69,8 @@ public class CosmosHttpClient implements CosmosHttpService {
         // GET https://terrybuildtokenbroker.documents.azure.com:443/dbs/Discovery/colls/Tenants/docs HTTP/1.1
         String url = getCosmosUrl() + "dbs/" + DATABASE + "/colls/" + COLLECTION + "/docs";
 
-        long start = System.currentTimeMillis();
         String response = getRequest(url, headers);
-        long end = System.currentTimeMillis();
-        System.out.println("  Reading Tenants from Cosmos DB : Took " + (end - start) + " milliseconds.");
+        System.out.println("  Read Tenants from Cosmos DB.");
 
         return response;
     
