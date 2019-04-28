@@ -5,28 +5,25 @@ TokenBroker is a simple implementation of the Token Broker concept.  The
 services using either Azure CosmosDB Resource Tokens (or alternatively Azure Storage Shared Access Signatures).
 
 For this demo we'll be using Java SpringBoot services 
-hosted in Azure WebApp for Containers.  Each small service is designed to be hosted in its
+hosted in Azure WebApp for Containers.  Each small service could also hosted in its
 own Docker instance.
 
-In this demo we'll be creating a Discovery Service as our use-case.  Customers
-will create a tenant record for themselves, and that tenant information is meant to be discoverable
-to any customer (without any auth). However, we want to ensure that a customer cannot change the
+In this demo we'll be creating a small configuration service as our use-case.  Customers
+will create a tenant record for themselves, and that tenant information is meant to be used by
+the system (that part is not defined). We want to ensure that a customer cannot read or change the
 record of another costumer.
 
 It is a set of small services:
 
-- DiscoveryAuth: A simple authentication service for doing username/password auth. Customers can
+- Auth: A simple authentication service for doing username/password auth. Customers can
 register in order to create a tenant record. After the customer has authenticated this service 
 generates a JSON Web Token (JWT) that allows the customer to authenticate to other services.
 
-- DiscoveryReader: A simple service that only has read-access to our data store. Could even be 
-placed behind a Content Delivery Network (CDN).
-
-- DiscoveryWriter: Requires customer authentication for each API call. Allows that customer to
-edit their tenant record (and no others). Has no inherent access to the data store itself.
+- Config: A simple configuration service that no inherent access to our data store. For instance
+it never has the Cosmos DB master key.
 
 - TokenBroker: Its only task is to validate the caller, ensure that the are allowed to do
-what they're requesting, and then generate and return a CosmosDB Resource Token.
+what they're requesting, and then generate and return a Resource Token or Master Key Signature.
 
 ### Code Changes
 Uses the GitFlow Workflow (see https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow).

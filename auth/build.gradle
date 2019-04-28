@@ -1,0 +1,46 @@
+buildscript {
+    ext {
+        springBootVersion = '2.1.3.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+group 'com.tokenbroker.auth'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+bootJar {
+    baseName = 'auth'
+    version =  '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile("org.springframework.boot:spring-boot-starter-security")
+    compile("com.google.code.gson:gson:2.8.5")
+    compile("com.microsoft.azure:azure-documentdb:2.2.2")
+    compile("io.jsonwebtoken:jjwt-api:0.10.5")
+
+    runtime("io.jsonwebtoken:jjwt-impl:0.10.5")
+    runtime("io.jsonwebtoken:jjwt-jackson:0.10.5")
+
+    testCompile("junit:junit")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile("org.assertj:assertj-core")
+}
