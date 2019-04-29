@@ -21,9 +21,11 @@ import org.springframework.stereotype.Component;
 public class BrokerProvider implements BrokerService {
     private static final Logger LOG = LoggerFactory.getLogger(BrokerProvider.class);
 
+    private static final String BROKER_HOST = System.getenv("COSMOS_TOKENBROKER_URL");
+
     @Override
     public String getReadMasterToken() {
-        String url = "http://localhost:8083/api/token/master/read";
+        String url = "http://" + BROKER_HOST + "/api/token/master/read";
         long start = System.currentTimeMillis();
 
         String response = getRequest(url);
@@ -40,7 +42,7 @@ public class BrokerProvider implements BrokerService {
 
     @Override
     public Permission getReadResourceToken(String tenantName) {
-        String url = "http://localhost:8083/api/token/resource/read/" + tenantName;
+        String url = "http://" + BROKER_HOST + "/api/token/resource/read/" + tenantName;
         long start = System.currentTimeMillis();
 
         String response = getRequest(url);

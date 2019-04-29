@@ -75,6 +75,8 @@ public class TenantDalSdk implements TenantDalService {
         FeedOptions options = new FeedOptions();
         options.setEnableCrossPartitionQuery(true);
 
+        long start = System.currentTimeMillis();
+
         // Retrieve the TenantDocModel documents.
         Observable<FeedResponse<Document>> observable = docClient
             .queryDocuments(CosmosDbUtil.constructCollectionLink(DATABASE_ID, COLLECTION_ID),
@@ -87,6 +89,10 @@ public class TenantDalSdk implements TenantDalService {
             FeedResponse<Document> page = iterator.next();
             documents.addAll(page.getResults());
         }
+
+        long end = System.currentTimeMillis();
+        //System.out.println("  Finished reading the Tenants from CosmosDB with ResourceToken.");
+        System.out.println("  Reading the Tenants from Cosmos DB with ResourceToken took: " + (end-start) + " milliseconds.");
 
         // De-serialize the documents into TenantDocModels.
         for (Document tenantDoc : documents) {
@@ -123,6 +129,8 @@ public class TenantDalSdk implements TenantDalService {
         FeedOptions options = new FeedOptions();
         options.setPartitionKey(new PartitionKey(tenantName));
 
+        long start = System.currentTimeMillis();
+
         // Retrieve the document using the DocumentClient for just this tenant.
         Observable<FeedResponse<Document>> observable = docClient
                 .queryDocuments(CosmosDbUtil.constructCollectionLink(DATABASE_ID, COLLECTION_ID),
@@ -136,7 +144,10 @@ public class TenantDalSdk implements TenantDalService {
             documents.addAll(page.getResults());
         }
 
-        System.out.println("  Read Document from CosmosDB.");
+        long end = System.currentTimeMillis();
+        //System.out.println("  Finished reading the Document from CosmosDB.");
+        System.out.println("  Reading the Tenant from Cosmos DB with ResourceToken took: " + (end-start) + " milliseconds.");
+
 
         if (documents.size() != 1) {
             LOG.error("Error: There should have only been 1 tenant doc! Instead there were " + documents.size());

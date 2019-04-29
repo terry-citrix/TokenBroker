@@ -13,6 +13,7 @@ buildscript {
 group 'com.tokenbroker.broker'
 
 apply plugin: 'java'
+apply plugin: 'war'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
@@ -34,6 +35,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator")
     compile("com.google.code.gson:gson:2.8.5")
     compile("com.microsoft.azure:azure-documentdb:2.2.2")
+
+    runtime("org.springframework.boot:spring-boot-starter-tomcat")
 
     testCompile("junit:junit")
     testCompile("org.springframework.boot:spring-boot-starter-test")

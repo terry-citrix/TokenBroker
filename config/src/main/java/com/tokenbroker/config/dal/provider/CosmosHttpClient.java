@@ -26,7 +26,6 @@ public class CosmosHttpClient implements CosmosHttpService {
     public static final Logger LOG = LoggerFactory.getLogger(CosmosHttpClient.class);
 
     private static String cosmosUrl = null;
-    private static String cosmosMasterKey = null;
 
     private static final String DATABASE = "Discovery";
     private static final String COLLECTION = "Tenants";
@@ -69,8 +68,13 @@ public class CosmosHttpClient implements CosmosHttpService {
         // GET https://terrybuildtokenbroker.documents.azure.com:443/dbs/Discovery/colls/Tenants/docs HTTP/1.1
         String url = getCosmosUrl() + "dbs/" + DATABASE + "/colls/" + COLLECTION + "/docs";
 
+        long start = System.currentTimeMillis();
+
         String response = getRequest(url, headers);
-        System.out.println("  Read Tenants from Cosmos DB.");
+
+        long end = System.currentTimeMillis();
+        //System.out.println("  Finished reading the Tenants from CosmosDB with Master Key Sig.");
+        System.out.println("  Reading the Tenants from Cosmos DB with Master Key Sig took: " + (end-start) + " milliseconds.");
 
         return response;
     
@@ -108,12 +112,6 @@ public class CosmosHttpClient implements CosmosHttpService {
     private boolean areDependenciesValid() {
         boolean isValid = true;
 
-        String cosmosMasterKey = getCosmosMasterKey();
-        if (cosmosMasterKey == null || cosmosMasterKey.isEmpty()) {
-            LOG.error("No CosmosDB Master Key was retrieved! A Master Key is needed in order to continue.");
-            isValid = false;
-        }
-
         String cosmosUrl = getCosmosUrl();
         if (cosmosUrl == null || cosmosUrl.isEmpty()) {
             LOG.error("No CosmosDB URL was retrieved! A URL for the DB is needed in order to continue.");
@@ -133,13 +131,6 @@ public class CosmosHttpClient implements CosmosHttpService {
             }
         }
         return cosmosUrl;
-    }
-
-    private String getCosmosMasterKey() {
-        if (cosmosMasterKey == null) {
-            cosmosMasterKey = System.getenv("COSMOS_MASTER_KEY");
-        }
-        return cosmosMasterKey;
     }
 
 }
