@@ -1,6 +1,7 @@
 package com.tokenbroker.config.logic.provider;
 
 import java.io.IOException;
+import java.net.URI;
 
 import com.tokenbroker.config.logic.BrokerService;
 import com.microsoft.azure.cosmosdb.Permission;
@@ -59,7 +60,7 @@ public class BrokerProvider implements BrokerService {
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             HttpGet httpGet = new HttpGet(url);
 
-            System.out.println("  Executing request " + httpGet.getRequestLine());
+            System.out.println("  Executing request " + httpGet.getMethod() + " <broker>" + httpGet.getURI().getPath());
 
             // Create a custom response handler
             ResponseHandler<String> responseHandler = getResponseHandler();

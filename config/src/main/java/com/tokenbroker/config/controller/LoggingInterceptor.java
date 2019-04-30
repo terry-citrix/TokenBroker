@@ -12,12 +12,16 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 public class LoggingInterceptor extends HandlerInterceptorAdapter {
     public static final Logger LOG = LoggerFactory.getLogger(LoggingInterceptor.class);
  
+    private static ThreadLocal<Long> startTime = new ThreadLocal<>();
+    private static final String IS_SHOW_TIMING = System.getenv("COSMOS_SHOW_TIMING");
+
     @Override
     public boolean preHandle(
         HttpServletRequest request, 
         HttpServletResponse response, 
         Object handler) 
     {
+        startTime.set(System.currentTimeMillis());
         System.out.println(request.getMethod() + " " + request.getRequestURI());
         return true;
     }
@@ -29,6 +33,12 @@ public class LoggingInterceptor extends HandlerInterceptorAdapter {
         Object handler, 
         Exception ex) 
     {
-        //
+        Long startTiming = startTime.get();
+        long start = startTiming == null ? 0 : startTime.get();
+        long end = System.currentTimeMillis();
+
+        if ("true".equalsIgnoreCase(IS_SHOW_TIMING)) {
+            System.out.println("  Total elapsed time : " + (end - start) + " milliseconds.");
+        }
     }
 }

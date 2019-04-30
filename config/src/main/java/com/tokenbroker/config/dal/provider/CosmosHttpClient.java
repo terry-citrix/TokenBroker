@@ -27,6 +27,8 @@ public class CosmosHttpClient implements CosmosHttpService {
 
     private static String cosmosUrl = null;
 
+    private static final String IS_SHOW_TIMING = System.getenv("COSMOS_SHOW_TIMING");
+
     private static final String DATABASE = "Discovery";
     private static final String COLLECTION = "Tenants";
 
@@ -73,8 +75,11 @@ public class CosmosHttpClient implements CosmosHttpService {
         String response = getRequest(url, headers);
 
         long end = System.currentTimeMillis();
-        System.out.println("  Finished reading the Tenants from CosmosDB with Master Key Signature.");
-        //System.out.println("  Reading the Tenants from Cosmos DB with Master Key Sig took: " + (end-start) + " milliseconds.");
+        if ("true".equalsIgnoreCase(IS_SHOW_TIMING)) {
+            System.out.println("  Reading the Tenants from Cosmos DB with Master Key Sig took: " + (end-start) + " milliseconds.");
+        } else {
+            System.out.println("  Finished reading the Tenants from CosmosDB with Master Key Signature.");
+        }
 
         return response;
     
@@ -84,8 +89,6 @@ public class CosmosHttpClient implements CosmosHttpService {
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             HttpGet httpGet = new HttpGet(url);
             httpGet.setHeaders(headers);
-
-            System.out.println("  Executing request " + httpGet.getRequestLine());
 
             // Create a custom response handler
             ResponseHandler<String> responseHandler = getResponseHandler();

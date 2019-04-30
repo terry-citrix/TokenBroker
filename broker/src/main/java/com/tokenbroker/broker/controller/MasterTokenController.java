@@ -19,12 +19,7 @@ public class MasterTokenController {
 
     @GetMapping("read")
     public String generateAllReadToken() {
-        long start = System.currentTimeMillis();
-
         String token = tokenService.generateReadAllToken();
-
-        long end = System.currentTimeMillis();
-        System.out.println("GET /api/token/master/read : Took " + (end - start) + " milliseconds.");
         return token;
     }
 

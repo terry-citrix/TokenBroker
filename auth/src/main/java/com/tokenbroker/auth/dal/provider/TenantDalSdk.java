@@ -280,31 +280,6 @@ public class TenantDalSdk implements TenantDalService {
         return collectionCache;
     }
 
-    private Document getDocumentById(String id) {
-        if (documentClient == null) {
-            LOG.error("DocumentClient is not valid!");
-            return null;
-        }
-
-        FeedOptions options = new FeedOptions();
-        options.setEnableCrossPartitionQuery(true);
-
-        // Retrieve the document using the DocumentClient.
-        List<Document> documentList = documentClient
-                .queryDocuments(getTenantCollection().getSelfLink(),
-                        "SELECT * FROM " + COLLECTION_ID + " c WHERE c.id='" + id + "'", 
-                        options)
-                .getQueryIterable().toList();
-
-        if (documentList.size() <= 0) {
-            return null;
-        }
-
-        Document doc = documentList.get(0);
-        LOG.info("Document selfLink: {}", doc.getSelfLink());
-        return doc;
-    }
-
     private Document getDocumentByTenantName(String tenantName) {
         if (documentClient == null) {
             LOG.error("DocumentClient is not valid!");

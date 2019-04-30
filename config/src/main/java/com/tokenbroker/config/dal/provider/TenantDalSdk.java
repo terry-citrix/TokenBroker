@@ -31,6 +31,8 @@ import rx.Observable;
 public class TenantDalSdk implements TenantDalService {
     private static final Logger LOG = LoggerFactory.getLogger(TenantDalSdk.class);
 
+    private static final String IS_SHOW_TIMING = System.getenv("COSMOS_SHOW_TIMING");
+
     private static final String DATABASE_ID = "Discovery";      // The name of our database.
     private static final String COLLECTION_ID = "Tenants";      // The name of our collection.
 
@@ -91,8 +93,11 @@ public class TenantDalSdk implements TenantDalService {
         }
 
         long end = System.currentTimeMillis();
-        System.out.println("  Finished reading the Tenants from CosmosDB with ResourceToken.");
-        //System.out.println("  Reading the Tenants from Cosmos DB with ResourceToken took: " + (end-start) + " milliseconds.");
+        if ("true".equalsIgnoreCase(IS_SHOW_TIMING)) {
+            System.out.println("  Reading the Tenants from Cosmos DB with ResourceToken took: " + (end-start) + " milliseconds.");
+        } else {
+            System.out.println("  Finished reading the Tenants from CosmosDB with ResourceToken.");
+        }
 
         // De-serialize the documents into TenantDocModels.
         for (Document tenantDoc : documents) {
@@ -145,9 +150,11 @@ public class TenantDalSdk implements TenantDalService {
         }
 
         long end = System.currentTimeMillis();
-        System.out.println("  Finished reading the Document from CosmosDB.");
-        //System.out.println("  Reading the Tenant from Cosmos DB with ResourceToken took: " + (end-start) + " milliseconds.");
-
+        if ("true".equalsIgnoreCase(IS_SHOW_TIMING)) {
+            System.out.println("  Reading the Tenant from Cosmos DB with ResourceToken took: " + (end-start) + " milliseconds.");
+        } else {
+            System.out.println("  Finished reading the Document from CosmosDB.");
+        }
 
         if (documents.size() != 1) {
             LOG.error("Error: There should have only been 1 tenant doc! Instead there were " + documents.size());
