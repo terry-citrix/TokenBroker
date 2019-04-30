@@ -1,8 +1,8 @@
 # TokenBroker
 
-TokenBroker is a simple implementation of the Token Broker pattern.  The  
-[Token Broker pattern](/docs/TokenBrokerConcept.md) allows for increased tenant isolation in multi-tenant
-services using either Azure CosmosDB Resource Tokens (or alternatively Master Key Signatures).
+TokenBroker is a simple implementation of the Token Broker pattern.  The [Token Broker pattern](/docs/TokenBrokerConcept.md) 
+allows for increased tenant isolation in multi-tenant services using either Azure CosmosDB Resource 
+Tokens or Master Key Signatures.
 
 In this demo we'll be creating a small configuration service as our use-case.  Customers
 will create a tenant record for themselves, and that tenant information is meant to be used by
@@ -11,7 +11,7 @@ cannot read or change the record of another customer.
 
 It is a set of 3 small Java-based SpringBoot services:
 
-- Auth: A simple authentication service for doing username/password auth. Customers can
+- Auth: A simple authentication service for doing username/password auth. Customers will first
 register in order to create a tenant. After the customer has authenticated this service 
 generates a JSON Web Token (JWT) that allows the customer to authenticate to other services.
 By default listens on port 8081.
