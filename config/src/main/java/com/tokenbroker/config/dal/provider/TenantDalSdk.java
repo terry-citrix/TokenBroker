@@ -91,8 +91,8 @@ public class TenantDalSdk implements TenantDalService {
         }
 
         long end = System.currentTimeMillis();
-        //System.out.println("  Finished reading the Tenants from CosmosDB with ResourceToken.");
-        System.out.println("  Reading the Tenants from Cosmos DB with ResourceToken took: " + (end-start) + " milliseconds.");
+        System.out.println("  Finished reading the Tenants from CosmosDB with ResourceToken.");
+        //System.out.println("  Reading the Tenants from Cosmos DB with ResourceToken took: " + (end-start) + " milliseconds.");
 
         // De-serialize the documents into TenantDocModels.
         for (Document tenantDoc : documents) {
@@ -145,8 +145,8 @@ public class TenantDalSdk implements TenantDalService {
         }
 
         long end = System.currentTimeMillis();
-        //System.out.println("  Finished reading the Document from CosmosDB.");
-        System.out.println("  Reading the Tenant from Cosmos DB with ResourceToken took: " + (end-start) + " milliseconds.");
+        System.out.println("  Finished reading the Document from CosmosDB.");
+        //System.out.println("  Reading the Tenant from Cosmos DB with ResourceToken took: " + (end-start) + " milliseconds.");
 
 
         if (documents.size() != 1) {

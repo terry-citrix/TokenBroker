@@ -73,8 +73,8 @@ public class CosmosHttpClient implements CosmosHttpService {
         String response = getRequest(url, headers);
 
         long end = System.currentTimeMillis();
-        //System.out.println("  Finished reading the Tenants from CosmosDB with Master Key Sig.");
-        System.out.println("  Reading the Tenants from Cosmos DB with Master Key Sig took: " + (end-start) + " milliseconds.");
+        System.out.println("  Finished reading the Tenants from CosmosDB with Master Key Signature.");
+        //System.out.println("  Reading the Tenants from Cosmos DB with Master Key Sig took: " + (end-start) + " milliseconds.");
 
         return response;
     
