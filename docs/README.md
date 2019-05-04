@@ -1,0 +1,2 @@
+See the details of the [Token Broker architecture](/docs/TokenBrokerConcept.md) 
+which allows for increased tenant isolation in multi-tenant services using either Azure CosmosDB Resource Tokens or Master Key Signatures.

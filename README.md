@@ -19,9 +19,11 @@ By default listens on port 8081.
 - Config: A simple configuration service that no inherent access to our data store. In particular
 it never has the Cosmos DB master key. By default listens on port 8082.
 
-- TokenBroker: Its only task is to validate the caller, ensure that the are allowed to do
+- Broker: Its only task is to validate the caller, ensure that the are allowed to do
 what they're requesting, and then generate and return a Resource Token or Master Key Signature.
 By default listents on port 8083.
+
+NOTE: Currently the Auth service has a lot of extra PoC code that is no longer used and which needs to be removed.  The Config and Broker service currently don't do any authentication, and hence the Broker service also doesn't do any request validation.
 
 ### Usage
 Create a Cosmos Database account with a name of "Discovery" and a collection of "Tenants", with a 
