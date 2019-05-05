@@ -1,4 +1,4 @@
-package com.tokenbroker.auth.dal;
+package com.tokenbroker.broker.logic;
 
 import static org.junit.Assert.assertThat;
 
@@ -16,11 +16,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class MasterKeyTokenTest {
 
     @Autowired
-    CosmosTokenService cosmosTokenService;
+    MasterTokenService tokenService;
 
     @Test
     public void generateSampleMasterKey() {
-        String output = cosmosTokenService.generateMasterKeyToken(
+        String output = tokenService.generateMasterKeyToken(
             "GET", 
             "dbs", 
             "dbs/ToDoList", 
@@ -35,8 +35,7 @@ public class MasterKeyTokenTest {
 
     @SpringBootApplication
     @ComponentScan({
-        "com.tokenbroker.auth.logic.provider",
-        "com.tokenbroker.auth.dal.provider"})
+        "com.tokenbroker.broker.logic.provider"})
     static class TestConfiguration {}
 
 }

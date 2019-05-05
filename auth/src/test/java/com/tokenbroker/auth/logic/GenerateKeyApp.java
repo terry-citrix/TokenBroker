@@ -36,13 +36,13 @@ public class GenerateKeyApp {
 
             System.out.println("\nHi!\n");
 
-            generateSampleMasterKey();
+            generateSampleHmacKey();
 
             System.out.println("\nBye!\n");
         };
     }
 
-    public void generateSampleMasterKey() {
+    public void generateSampleHmacKey() {
         Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
         byte[] keyBytes = key.getEncoded();
