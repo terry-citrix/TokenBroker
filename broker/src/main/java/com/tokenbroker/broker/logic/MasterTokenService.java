@@ -1,10 +1,12 @@
 package com.tokenbroker.broker.logic;
 
+import com.tokenbroker.broker.controller.model.CosmosHeaders;
+
 public interface MasterTokenService {
     
-    public String generateReadAllToken();
+    public CosmosHeaders generateReadAllToken();
 
-    public String generateMasterKeyToken(
+    public CosmosHeaders generateMasterKeyToken(
         String verb, 
         String resourceType, 
         String resourceId, 

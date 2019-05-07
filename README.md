@@ -23,7 +23,7 @@ it never has the Cosmos DB master key. By default listens on port 8082.
 what they're requesting, and then generate and return a Resource Token or Master Key Signature.
 By default listents on port 8083.
 
-NOTE: Currently the Auth service has a lot of extra PoC code that is no longer used and which needs to be removed.  The Config and Broker service currently don't do any authentication, and hence the Broker service also doesn't do any request validation.
+NOTE: Currently the Auth service has some code which is not used and which needs to be removed.  The Config and Broker service currently don't do any authentication, and hence the Broker service also doesn't do any request validation.
 
 ### Usage
 Create a Cosmos Database account with a name of "Discovery" and a collection of "Tenants", with a 

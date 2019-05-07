@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.microsoft.azure.documentdb.Permission;
 import com.microsoft.azure.documentdb.User;
+import com.tokenbroker.broker.controller.model.CosmosHeaders;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,11 +113,12 @@ public class TokenServiceTestApp {
     public void testGenerateReadMasterToken() {
         System.out.println("\nStarting the ReadMasterToken test.\n");
 
-        String readToken = masterTokenService.generateReadAllToken();
-        LOG.info("The master token is: " + readToken);
+        CosmosHeaders headers = masterTokenService.generateReadAllToken();
+        String readToken = headers.getAuthorization();
+        LOG.info("The master Authorization header is: " + readToken);
 
-        assertNotNull("Error: No resource token was returned!", readToken);
-        assertTrue("Error: The resource token is empty!", !readToken.isEmpty());
+        assertNotNull("Error: No master token signature was returned!", readToken);
+        assertTrue("Error: The master token signature is empty!", !readToken.isEmpty());
 
         System.out.println("\nFinished the ReadMasterToken test successfully.\n");
     }

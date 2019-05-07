@@ -13,6 +13,7 @@ import java.util.Base64;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.tokenbroker.broker.controller.model.CosmosHeaders;
 import com.tokenbroker.broker.logic.MasterTokenService;
 import com.google.gson.Gson;
 
@@ -38,9 +39,9 @@ public class MasterTokenProvider implements MasterTokenService {
     }
     
     @Override
-    public String generateReadAllToken() {
+    public CosmosHeaders generateReadAllToken() {
         String dateValue = getDateValue();
-        return generateMasterKeyToken(
+        CosmosHeaders headers = generateMasterKeyToken(
             "GET",          // Verb
             "docs",         // Resource Type
             "dbs/" + DATABASE + "/colls/" + COLLECTION, // Resource Link, meaning everything between first / and the last / character.
@@ -48,6 +49,8 @@ public class MasterTokenProvider implements MasterTokenService {
             MASTER_KEY,
             "master",       // Key Type
             "1.0");         // Token Version
+
+        return headers;
     }
     
     /**
@@ -64,7 +67,7 @@ public class MasterTokenProvider implements MasterTokenService {
      * @return
      */
     @Override
-    public String generateMasterKeyToken(
+    public CosmosHeaders generateMasterKeyToken(
         String verb, 
         String resourceType, 
         String resourceId, 
@@ -97,7 +100,13 @@ public class MasterTokenProvider implements MasterTokenService {
 
         long end = System.currentTimeMillis();
         System.out.println("  Generating Master Key Signature : Took " + (end - start) + " milliseconds.");
-        return headerEncoded;
+
+        LOG.debug("  Date is: " + date);
+
+        CosmosHeaders headers = new CosmosHeaders();
+        headers.setDateTime(date);
+        headers.setAuthorization(headerEncoded);
+        return headers;
     }
 
     private String hashHmac256(String key, String data) {

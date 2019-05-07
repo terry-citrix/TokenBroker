@@ -3,6 +3,8 @@ package com.tokenbroker.broker.logic;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.assertEquals;
 
+import com.tokenbroker.broker.controller.model.CosmosHeaders;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +37,7 @@ public class TokenServiceTest {
     @Ignore
     @Test
     public void generateSampleMasterKey() {
-        String output = tokenService.generateMasterKeyToken(
+        CosmosHeaders headers = tokenService.generateMasterKeyToken(
             "GET", 
             "docs", 
             "dbs/Discovery/colls/Tenants", 
@@ -43,7 +45,8 @@ public class TokenServiceTest {
             MASTER_KEY, 
             "master",
             "1.0");
-        System.out.println("Master Key Signature: " + output);
+        String output = headers.getAuthorization();
+        System.out.println("Authorization header: " + output);
 
         String expected = "type%3Dmaster%26ver%3D1.0%26sig%3DcmCoJFbOuAGpphdjDYm%2FSg%2BAoCIHCDZR1zYJpRT14sM%3D";
         assertEquals(expected, output);

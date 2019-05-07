@@ -1,9 +1,10 @@
 package com.tokenbroker.config.logic.provider;
 
 import java.io.IOException;
-import java.net.URI;
 
 import com.tokenbroker.config.logic.BrokerService;
+import com.tokenbroker.config.logic.model.CosmosHeaders;
+import com.google.gson.Gson;
 import com.microsoft.azure.cosmosdb.Permission;
 
 import org.apache.http.HttpEntity;
@@ -23,9 +24,10 @@ public class BrokerProvider implements BrokerService {
     private static final Logger LOG = LoggerFactory.getLogger(BrokerProvider.class);
 
     private static final String BROKER_HOST = System.getenv("COSMOS_TOKENBROKER_URL");
+    private static Gson gson = new Gson();
 
     @Override
-    public String getReadMasterToken() {
+    public CosmosHeaders getReadMasterToken() {
         String url = "http://" + BROKER_HOST + "/api/token/master/read";
         long start = System.currentTimeMillis();
 
@@ -33,7 +35,10 @@ public class BrokerProvider implements BrokerService {
 
         long end = System.currentTimeMillis();
         System.out.println("  Reading Master Key Signature from Broker service: Took " + (end - start) + " milliseconds.");
-        return response;
+
+        CosmosHeaders headers = gson.fromJson(response, CosmosHeaders.class);
+
+        return headers;
     }
 
     @Override

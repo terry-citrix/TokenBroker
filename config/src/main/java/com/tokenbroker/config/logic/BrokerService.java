@@ -1,6 +1,7 @@
 package com.tokenbroker.config.logic;
 
 import com.microsoft.azure.cosmosdb.Permission;
+import com.tokenbroker.config.logic.model.CosmosHeaders;
 
 public interface BrokerService {
 
@@ -8,7 +9,7 @@ public interface BrokerService {
      * Gets a Master Key Signature that grants read access to the collection.
      * @return The master key signature for the collection.
      */
-    public String getReadMasterToken();
+    public CosmosHeaders getReadMasterToken();
 
     /**
      * Gets a Resource Token that grants read access to the collection.

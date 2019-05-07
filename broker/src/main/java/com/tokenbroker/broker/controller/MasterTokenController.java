@@ -1,5 +1,6 @@
 package com.tokenbroker.broker.controller;
 
+import com.tokenbroker.broker.controller.model.CosmosHeaders;
 import com.tokenbroker.broker.logic.MasterTokenService;
 
 import org.slf4j.Logger;
@@ -18,9 +19,9 @@ public class MasterTokenController {
     MasterTokenService tokenService;
 
     @GetMapping("read")
-    public String generateAllReadToken() {
-        String token = tokenService.generateReadAllToken();
-        return token;
+    public CosmosHeaders generateAllReadToken() {
+        CosmosHeaders headers = tokenService.generateReadAllToken();
+        return headers;
     }
 
 }

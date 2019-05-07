@@ -2,6 +2,8 @@ package com.tokenbroker.config.dal.provider;
 
 import com.tokenbroker.config.dal.CosmosHttpService;
 import com.tokenbroker.config.logic.BrokerService;
+import com.tokenbroker.config.logic.model.CosmosHeaders;
+
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -17,9 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Component
 public class CosmosHttpClient implements CosmosHttpService {
@@ -35,25 +34,19 @@ public class CosmosHttpClient implements CosmosHttpService {
     private static final String ACCEPT = "Accept";
     private static final String ACCEPT_VALUE = "application/json";
     private static final String X_MS_VERSION = "x-ms-version";
-    private static final String X_MS_VERSION_VALUE = "2017-02-22";
+    private static final String X_MS_VERSION_VALUE = "2016-07-11";  // 2017-02-22
     private static final String X_MS_DATE = "x-ms-date";
     private static final String AUTHORIZATION = "Authorization";
 
     @Autowired
     BrokerService brokerService;
 
-    private String getDateValue() {
-        return DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneId.of("GMT")));
-        //return "Tue, 16 Apr 2019 21:03:05 GMT";  // Good
-    }
-
     public String readTenants() {
         if (!areDependenciesValid()) {
             return null;
         }
 
-        String dateValue = getDateValue();
-        String token = brokerService.getReadMasterToken();
+        CosmosHeaders masterTokenHeaders = brokerService.getReadMasterToken();
 
         // Sample: 
         // Accept: application/json
@@ -63,8 +56,8 @@ public class CosmosHttpClient implements CosmosHttpService {
         Header[] headers = new Header[4];
         headers[0] = new BasicHeader(ACCEPT, ACCEPT_VALUE);
         headers[1] = new BasicHeader(X_MS_VERSION, X_MS_VERSION_VALUE);
-        headers[2] = new BasicHeader(X_MS_DATE, dateValue);
-        headers[3] = new BasicHeader(AUTHORIZATION, token);
+        headers[2] = new BasicHeader(X_MS_DATE, masterTokenHeaders.getDateTime());
+        headers[3] = new BasicHeader(AUTHORIZATION, masterTokenHeaders.getAuthorization());
 
         // URL example: https://{host}/dbs/Discovery/colls/Tenants/docs
         // GET https://terrybuildtokenbroker.documents.azure.com:443/dbs/Discovery/colls/Tenants/docs HTTP/1.1
@@ -90,6 +83,12 @@ public class CosmosHttpClient implements CosmosHttpService {
             HttpGet httpGet = new HttpGet(url);
             httpGet.setHeaders(headers);
 
+            Header[] allHeaders = httpGet.getAllHeaders();
+            LOG.debug("  All Headers: ");
+            for (Header header : allHeaders) {
+                LOG.debug("    " + header.getName() + " : " + header.getValue());
+            }
+
             // Create a custom response handler
             ResponseHandler<String> responseHandler = getResponseHandler();
             String responseBody = httpclient.execute(httpGet, responseHandler);
@@ -106,6 +105,11 @@ public class CosmosHttpClient implements CosmosHttpService {
             if (status >= 200 && status < 300) {
                 HttpEntity entity = response.getEntity();
                 return entity != null ? EntityUtils.toString(entity) : null;
+            } else if (status >= 400 && status < 500) {
+                HttpEntity entity = response.getEntity();
+                String responseBody = entity != null ? EntityUtils.toString(entity) : null;
+                LOG.debug("Not allowed. Details: " + responseBody);
+                return null;
             } else {
                 throw new ClientProtocolException("Unexpected response status: " + status);
             }
