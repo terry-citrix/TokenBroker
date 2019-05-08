@@ -9,5 +9,4 @@
 rootProject.name = 'tokenbroker'
 
 include 'broker'
-include 'auth'
 include 'config'

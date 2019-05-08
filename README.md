@@ -9,12 +9,7 @@ will create a tenant record for themselves, and that tenant information is meant
 the system (the system itself is outside the scope of this demo). We want to ensure that a customer 
 cannot read or change the record of another customer.
 
-It is a set of 3 small Java-based SpringBoot services:
-
-- Auth: A simple authentication service for doing username/password auth. Customers will first
-register in order to create a tenant. After the customer has authenticated this service 
-generates a JSON Web Token (JWT) that allows the customer to authenticate to other services.
-By default listens on port 8081.
+It is a set of 2 small Java-based SpringBoot services:
 
 - Config: A simple configuration service that no inherent access to our data store. In particular
 it never has the Cosmos DB master key. By default listens on port 8082.
@@ -23,8 +18,6 @@ it never has the Cosmos DB master key. By default listens on port 8082.
 what they're requesting, and then generate and return a Resource Token or Master Key Signature.
 By default listents on port 8083.
 
-NOTE: Currently the Auth service has some code which is not used and which needs to be removed.  The Config and Broker service currently don't do any authentication, and hence the Broker service also doesn't do any request validation.
-
 ### Usage
 Create a Cosmos Database account with a name of "Discovery" and a collection of "Tenants", with a 
 partition key on the field "tenantName".
@@ -32,8 +25,7 @@ partition key on the field "tenantName".
 Sync the code and then build it.  For example in PowerShell on Windows (though you can do this on 
 Unix as well): `.\gradlew.bat clean build`
 
-Run all 3 services.  Each of them are executable war files.  So for example on Windows: 
-- `java -jar .\auth\build\libs\auth.war`
+Run all services.  Each of them are executable war files.  So for example on Windows: 
 - `java -jar .\broker\build\libs\broker.war`
 - `java -jar .\config\build\libs\config.war`
 
@@ -43,9 +35,9 @@ Use a web tool such as Curl or Postman to compose REST API requests to the servi
 - To get a read-only Master Key Signature from the Broker service for all tenants:
     - `GET http://localhost:8083/api/token/master/read`
 - To get a list of all tenants from the Config service by using a Master Key Signature:
-    - `http://localhost:8082/api/tenant`
+    - `GET http://localhost:8082/api/tenant`
 - To get the document for tenant "acme" from the Config service by using a Resource Token:
-    - `http://localhost:8082/api/tenant/acme`
+    - `GET http://localhost:8082/api/tenant/acme`
 
 ### Environment Settings
 
